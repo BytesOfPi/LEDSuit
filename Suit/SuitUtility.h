@@ -21,8 +21,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef StrandUtility_H
-#define StrandUtility_H
+#ifndef SuitUtility_H
+#define SuitUtility_H
 
 #include "../BLE/BLEUtility.h"
 
@@ -139,11 +139,11 @@ void safePattern()
 }
 
 /*
- * bleStrand()
+ * bleSuit()
  * This method is called from Bluetooth and directs what actions
  * the global PatternScroll (scroll) class will do.
  */
-void bleStrand(String val)
+void bleSuit(String val)
 {
     // If phone sent "back", back up to previous LED pattern
     if (val.equals("back"))
@@ -160,6 +160,18 @@ void bleStrand(String val)
     {
       setPattern(val);
     }
+}
+
+/*
+ * LED Outfit chaser correct()
+ * The LED outfit starts at the waist so the starting pixel of the LED strands are close
+ * to the person's waist.  If you want the chaser to go up one leg and down the other, 
+ * we flip the first 75 pixel positions using this function so pixel position 0 is at
+ * the foot rather than at waist.
+ */
+int chaserCorrect(int val)
+{
+  return (val < 75) ? map(val, 0, 74, 74, 0) : val;
 }
 
 #endif

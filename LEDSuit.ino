@@ -41,11 +41,17 @@ void setup()
   // Run Setup specific to BLE logic
   bleSetup();
 
+  // 3 second delay to allow capacitor to fill up and LEDs to juice up.
+  delay(3000); 
+
   // Run Setup specific to LED logic
   ledSetup();
 
   // LED Matrix setup
   matrixSetup();
+
+  // Cape setup
+  capeSetup();
 }
 
 /*
@@ -65,6 +71,9 @@ void loop()
 
   // Run loop specific to matrix
   matrixLoop();
+  
+  // Run loop specific to cape
+  capeLoop();
 
   // Send FastLED info out once rather than in ledLoop and matrixLoop
   FastLED.show();

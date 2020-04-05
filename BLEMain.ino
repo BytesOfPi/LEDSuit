@@ -48,12 +48,12 @@ void bleSetup()
   pCharSendStrandMsg->addDescriptor(new BLE2902());
 
   //--------------------------------------------------------------
-  // Step 2: Setup the Get LED Strand Message Characteristic
+  // Step 2: Setup the Get LED Suit Message Characteristic
   BLECharacteristic *pCharGetMsg = pService->createCharacteristic(
       CHARACTERISTIC_GET_STRAND_UUID,
       BLECharacteristic::PROPERTY_READ |
           BLECharacteristic::PROPERTY_WRITE);
-  pCharGetMsg->setCallbacks(new CustomBLECharacteristicCallbacks(BLE_STRAND_CALLBACK));
+  pCharGetMsg->setCallbacks(new CustomBLECharacteristicCallbacks(BLE_SUIT_CALLBACK));
   pCharGetMsg->setValue("Control by writing here");
 
   //--------------------------------------------------------------

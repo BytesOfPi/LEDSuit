@@ -6,9 +6,9 @@
 #define GetMatrixMsgCallbacks_H
 
 #include "../Matrix/MatrixUtility.h"
-#include "../Strand/StrandUtility.h"
+#include "../Suit/SuitUtility.h"
 
-#define BLE_STRAND_CALLBACK 0x00
+#define BLE_SUIT_CALLBACK 0x00
 #define BLE_MATRIX_SCROLL_CALLBACK 0x01
 #define BLE_MATRIX_TIMER_CALLBACK 0x02
 #define BLE_MATRIX_PATTERN_CALLBACK 0x03
@@ -51,8 +51,8 @@ public:
     case BLE_MATRIX_TIMER_CALLBACK:
       bleMatrixTimer(val);
       break;
-    case BLE_STRAND_CALLBACK:
-      bleStrand(val);
+    case BLE_SUIT_CALLBACK:
+      bleSuit(val);
       break;
     }
   }

@@ -3,15 +3,17 @@
  * The following file defines the main setup and loop for LEDs as well as shared
  * variables and methods
  */
+#define LED_TYPE WS2812B
+#define COLOR_ORDER GRB
+
 #define DATA_PIN_001 4
 #define DATA_PIN_002 16
 #define DATA_PIN_003 17
 
-#define LED_TYPE WS2812B
-#define COLOR_ORDER GRB
 #define NUM_LEDS_001 75
 #define NUM_LEDS_002 150
 #define NUM_LEDS_003 75
+
 #define LED_INDEX_001 NUM_LEDS_001
 #define LED_INDEX_002 NUM_LEDS_001 + NUM_LEDS_002
 #define LED_INDEX_003 LED_INDEX_002 + NUM_LEDS_003
@@ -23,8 +25,8 @@ CRGB leds[NUM_LEDS];
 
 #define TOT_SCROLL 30
 
-uint8_t gHue = 0;                  // rotating "base color" used by many of the patterns
-byte offset = 0;                   // rotating offset used to push theater patterns on
+uint8_t gHue = 0; // rotating "base color" used by many of the patterns
+byte offset = 0;      // rotating offset used to push theater patterns on
 
 // Used for palette style patterns
 uint8_t startIndex = 0;
@@ -71,24 +73,12 @@ const TProgmemPalette16 myChristmasPalette_p PROGMEM =
         CRGB::Gray, CRGB::Red, CRGB::Green, CRGB::SaddleBrown,
         CRGB::Gray, CRGB::Red, CRGB::Green, CRGB::SaddleBrown};
 
+//#################################################################
+// Utility functions
+#include "Suit/SuitUtility.h"
 
 //#################################################################
 // Utility functions
-#include "Strand/StrandUtility.h"
-
-//#################################################################
-// Utility functions
-/*
- * LED Outfit chaser correct()
- * The LED outfit starts at the waist so the starting pixel of the LED strands are close
- * to the person's waist.  If you want the chaser to go up one leg and down the other, 
- * we flip the first 75 pixel positions using this function so pixel position 0 is at
- * the foot rather than at waist.
- */
-int chaserCorrect(int val)
-{
-  return (val < 75) ? map(val, 0, 74, 74, 0) : val;
-}
 /*
  * fillRange()
  * There is probably a better way to do this, but this method just loops
@@ -262,11 +252,6 @@ void mixSpec(CRGBPalette16 pal, TBlendType blendType, uint8_t colorIndex)
  */
 void ledSetup()
 {
-  delay(3000); // 3 second delay to allow capacitor to fill up and LEDs to juice up.
-
-  // tell FastLED about the LED strip configuration
-  // FastLED.addLeds<LED_TYPE, DATA_PIN_001, COLOR_ORDER>(leds, NUM_LEDS).setCorrection( TypicalLEDStrip );
-
   // tell FastLED there 3 data pins,
   //    first set starts at 0 and goes NUM_LEDS_001 length
   //    first set starts at NUM_LEDS_001 and goes NUM_LEDS_002 length
