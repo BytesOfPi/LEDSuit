@@ -3,7 +3,8 @@
  * The following file defines the main setup and loop for LEDs as well as shared
  * variables and methods
  */
-#define MATRIX_DATA_PIN 5
+// #define MATRIX_DATA_PIN 5
+#define MATRIX_DATA_PIN 18
 #define MATRIX_CHIPSET WS2812B
 #define MATRIX_COLOR_ORDER GRB
 #define MATRIX_BRIGHTNESS 20
