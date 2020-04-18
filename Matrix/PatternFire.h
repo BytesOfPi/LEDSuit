@@ -32,7 +32,7 @@
 class PatternFire : public Drawable
 {
 private:
-    byte heat[NUM_LEDS];
+    byte heat[CANVAS_NUM_LEDS];
 
 public:
     //--------------------------------------------------------------

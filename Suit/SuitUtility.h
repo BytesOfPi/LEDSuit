@@ -1,8 +1,12 @@
 /*
- * 
- * ???: https://github.com/???
+ * SuitUtility.h: https://github.com/BytesOfPi/LEDSuit
  * Copyright (c) 2020 Nathan DeGroff
  *
+ * Overview:
+ * This file defines the methods used when communicating with BLE controller application.
+ * It allows the BLE to see which pattern is selected and to control which pattern is
+ * displayed.
+ * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
  * the Software without restriction, including without limitation the rights to
@@ -24,6 +28,8 @@
 #ifndef SuitUtility_H
 #define SuitUtility_H
 
+//---------------------------------------------------------
+// Make sure BLE Utility has been called for bleNotifyStrandMsg()
 #include "../BLE/BLEUtility.h"
 
 //---------------------------------------------------------
@@ -31,38 +37,19 @@
 // LED sequence is running
 byte PATTERN_NUMBER = 0;
 
-// Define quick function to get number of entries in array
-#define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
-
-// List of patterns to cycle through.  Each is defined as a separate function below.
-typedef void (*SimplePatternList[])();
-// Hiding rainbows ("rainbow", "paletteRainbowStripe", "rainbowSolid", "paletteParty")
-SimplePatternList gPatterns = {cycle,
-                               paletteCCHS, paletteCCHS2, solidCCHS,
-                               palletteCCHSGlitter, twoSplit, juggle,
-                               confetti, paletteRWB, paletteCloud,
-                               paletteLava, paletteHeat, paletteOcean, paletteForest, paletteChristmas,
-                               bpmParty, bpmRWB, bpmChristmas,
-                               solidBlueGreen, solidBlue, solidRed, solidGreen,
-                               theaterCCHS, theaterChristmas,
-                               mixinsCCHS, mixinsLava, mixSpecLava, mixSpecOcean, mixSpecForest,
-                               lightning, power};
-const int MAX_PATTERN_INDEX = ARRAY_SIZE(gPatterns) - 1;
-
+#define TOT_PATTERN_NUM 29
+#define MAX_PATTERN_INDEX TOT_PATTERN_NUM - 1
 
 // Hiding rainbows ("rainbow", "paletteRainbowStripe", "rainbowSolid", "paletteParty")
-String gPattName[MAX_PATTERN_INDEX + 1] = {"cycle",
-                                           "paletteCCHS", "paletteCCHS2", "solidCCHS",
-                                           "palletteCCHSGlitter", "twoSplit", "juggle",
-                                           "confetti", "paletteRWB", "paletteCloud",
-                                           "paletteLava", "paletteHeat", "paletteOcean", "paletteForest", "paletteChristmas",
-                                           "bpmParty", "bpmRWB", "bpmChristmas",
-                                           "solidBlueGreen", "solidBlue", "solidRed", "solidGreen",
-                                           "theaterCCHS", "theaterChristmas",
-                                           "mixinsCCHS", "mixinsLava", "mixSpecLava", "mixSpecOcean", "mixSpecForest",
-                                           "lightning", "power"};
-
-uint8_t gCurrentPatternNumber = 0; // Index number of which pattern is current
+String gPattName[] = {"cycle",
+                      "paletteCCHS", "paletteCCHS2", "solidCCHS",
+                      "palletteCCHSGlitter", "twoSplit", "juggle",
+                      "confetti", "paletteRWB", "paletteCloud",
+                      "paletteLava", "paletteHeat", "paletteOcean", "paletteForest", "paletteChristmas",
+                      "bpmParty", "bpmRWB", "bpmChristmas",
+                      "solidBlueGreen", "solidBlue", "solidRed", "solidGreen",
+                      "theaterCCHS", "theaterChristmas",
+                      "mixinsCCHS", "mixinsLava", "mixSpecLava", "mixSpecOcean", "mixSpecForest"};
 
 #define SAFE_NEXT_PATTERN(val) (val + 1 > MAX_PATTERN_INDEX ? 0 : val + 1)
 #define SAFE_PREV_PATTERN(val) (val == 0 ? MAX_PATTERN_INDEX : val - 1)
@@ -160,18 +147,6 @@ void bleSuit(String val)
     {
       setPattern(val);
     }
-}
-
-/*
- * LED Outfit chaser correct()
- * The LED outfit starts at the waist so the starting pixel of the LED strands are close
- * to the person's waist.  If you want the chaser to go up one leg and down the other, 
- * we flip the first 75 pixel positions using this function so pixel position 0 is at
- * the foot rather than at waist.
- */
-int chaserCorrect(int val)
-{
-  return (val < 75) ? map(val, 0, 74, 74, 0) : val;
 }
 
 #endif
