@@ -85,7 +85,7 @@ void bleMatrixScroll(String val)
 }
 
 /*
- * bleMatrixTimer()
+ * bleMatrixPattern()
  * This method is called from Bluetooth and directs what actions
  * the global PatternScroll (scroll) class will do.
  */

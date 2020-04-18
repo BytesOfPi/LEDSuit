@@ -19,7 +19,7 @@ byte rowPins[ROWS] = {12, 14, 27, 26};
 byte colPins[COLS] = {25, 33, 32};
 
 // Final creation of keypad based on pins, rows, and cols
-Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
+//Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
 
 /*
  * Store Keys
@@ -63,7 +63,9 @@ void clearKeys()
 
 void keyboardCycleLoop() {
   
-  char key = keypad.getKey();
+ //2020-04-13 - commenting out keyboard logic
+  //char key = keypad.getKey();
+  char key = 'R';
   if (key)
   {
   if ( key == '1' ) 
@@ -108,10 +110,10 @@ void keyLogic( char key ) {
  * Here we specify what we detect from the keypad and act upon it
  */
 void keyboardLoop() {
-
-  char key = keypad.getKey();
-  if (key)
-  {
-    keyLogic(key);
-  }
+ //2020-04-13 - commenting out keyboard logic
+ // char key = keypad.getKey();
+ // if (key)
+ // {
+ //   keyLogic(key);
+ // }
 }

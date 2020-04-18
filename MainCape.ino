@@ -17,6 +17,8 @@ Cape* cape = new Cape();
  */
 void capeSetup()
 {
+    //--------------------------------------------------------------
+    // Setup Cape LEDs
     cape->setup();
 }
 
