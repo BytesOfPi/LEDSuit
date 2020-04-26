@@ -72,37 +72,13 @@ private:
                                                  new PatternIncrementalDrift(CANVAS_WIDTH, CANVAS_HEIGHT),
                                                  new PatternBTS(CANVAS_WIDTH, CANVAS_HEIGHT),
                                                  new PatternCustomBit(CANVAS_WIDTH, CANVAS_HEIGHT)};
-    Drawable *thisPattern = matrixDraw[0];
+    Drawable *thisDrawable = matrixDraw[0];
 
 public:
     //--------------------------------------------------------------
     // Constructor
-    Matrix() : ComponentLED("Matrix", currentMatrixPattern, patternMatrix, MATRIX_NUM_PATTERNS, patternMatrixCycleSkip, MATRIX_NUM_CYCLE_SKIP) {}
+    Matrix() : ComponentLED("Matrix", gConfig.currentMatrixPattern) {}
 
-    Drawable *getPattern(String patt)
-    {
-        for (int i = 0; i < MATRIX_NUM_PATTERNS; i++)
-        {
-            if (matrixDraw[i]->name.equals(patt))
-                return matrixDraw[i];
-        }
-        return matrixDraw[0];
-    }
-    /**
-       * switchPattern()
-       * This method is called every time there is a pattern switch.  This will allow
-       * us to reset any stored values that patterns use 
-       */
-    virtual void switchPattern()
-    {
-        myCanvas[0].fillScreen(CRGB::Black);
-        thisPattern->stop(myCanvas[0]);
-        thisPattern = getPattern(currentPatt.equals("cycle") ? patternMatrix[cyclePattIndex] : currentPatt);
-
-        Serial.print("Matrix: ["); Serial.print(thisPattern->name); Serial.println("]");
-        thisPattern->start(myCanvas[0]);
-        thisPattern->setPalette(matrixPalettes[random8(MATRIX_NUM_PALETTES)]);
-    }
     /**
        * setup()
        * This method initializes the LEDs and the class variables.
@@ -115,10 +91,22 @@ public:
 
         myCanvas[0].setTextWrap(false);
         myCanvas[0].setTextSize(1);
+    }
 
-        //------------------------------------------------------------
-        // Get to next safe cycle
-        cycleNext();
+    /**
+       * switchPattern()
+       * This method is called every time there is a pattern switch.  This will allow
+       * us to reset any stored values that patterns use 
+       */
+    virtual void switchPattern()
+    {
+        myCanvas[0].fillScreen(CRGB::Black);
+        thisDrawable->stop(myCanvas[0]);
+        
+        thisDrawable = getDrawable(getCurrentPatt());
+
+        thisDrawable->start(myCanvas[0]);
+        thisDrawable->setPalette(matrixPalettes[random8(MATRIX_NUM_PALETTES)]);
     }
 
     /**
@@ -128,24 +116,20 @@ public:
     virtual unsigned int drawPattern(String patt)
     {
         //------------------------------------------------------------
-        // return cycle
-        if (patt.equals(CAPE_PATT_CYCLE))
-            return cycle();
-
-        //------------------------------------------------------------
         // Draw the pattern
-        thisPattern->drawFrame(myCanvas[0]);
+        thisDrawable->drawFrame(myCanvas[0]);
 
         return 0;
     }
-    virtual void periodicAdjust()
+
+    Drawable *getDrawable(String patt)
     {
-        //--------------------------------------------------------------
-        // Switch cycle() pattern every 10 seconds
-        EVERY_N_SECONDS(10)
+        for (int i = 0; i < MATRIX_NUM_PATTERNS; i++)
         {
-            cycleNext();
+            if (matrixDraw[i]->name.equals(patt))
+                return matrixDraw[i];
         }
+        return matrixDraw[0];
     }
 };
 

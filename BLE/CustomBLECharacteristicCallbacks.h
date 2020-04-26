@@ -44,13 +44,9 @@ public:
       break;
     // Set component pattern
     case BLE_SUIT_PATT_CALLBACK:
-      bleSuitPattern(val);
-      break;
     case BLE_MATRIX_PATT_CALLBACK:
-      currentMatrixPattern = val;
-      break;
     case BLE_CAPE_PATT_CALLBACK:
-      currentCapePattern = val;
+      blePattern(val, type);
       break;
 
     // Set component palette
@@ -82,37 +78,74 @@ public:
     if (val.equals(FULL_PATT_BPM))
     {
       setupSuit(SUIT_PATT_BPM_PARTY, PALETTE_PARTY);
-      setupMatrix(SUIT_PATT_BPM_PARTY, PALETTE_PARTY);
-      setupCape(MATRIX_PATT_WAVE, PALETTE_PARTY);
+      setupMatrix(MATRIX_PATT_WAVE, PALETTE_PARTY);
+      setupCape(CAPE_PATT_BPM, PALETTE_PARTY);
       return;
     }
     if (val.equals(FULL_PATT_CCHS))
     {
-      setupSuit(SUIT_PATT_BPM_PARTY, PALETTE_CCHS);
-      setupMatrix(SUIT_PATT_BPM_PARTY, PALETTE_CCHS);
-      setupCape(MATRIX_PATT_WAVE, PALETTE_CCHS, PALETTE_CCHS);
+      setupSuit(SUIT_PATT_CCHS, PALETTE_CCHS);
+      setupMatrix(MATRIX_PATT_PULSE, PALETTE_CCHS);
+      setupCape(CAPE_PATT_JUGGLE, PALETTE_CCHS, PALETTE_CCHS);
+      return;
+    }
+    if (val.equals(FULL_PATT_JUGGLE))
+    {
+      setupSuit(SUIT_PATT_JUGGLE, PALETTE_PARTY);
+      setupMatrix(MATRIX_PATT_FIRE, PALETTE_HEAT);
+      setupCape(CAPE_PATT_JUGGLE, PALETTE_PARTY, PALETTE_PARTY);
+      return;
+    }
+    if (val.equals(FULL_PATT_BTS))
+    {
+      setupSuit(SUIT_PATT_CONFETTI, PALETTE_PARTY);
+      setupMatrix(MATRIX_PATT_BTS, PALETTE_HEAT);
+      setupCape(CAPE_PATT_SPARKLE, PALETTE_PARTY, PALETTE_PARTY);
       return;
     }
   }
 
   void setupSuit(String patt, MPal pal = PALETTE_PARTY, MCol col = COLOR_BLUE)
   {
-    bleSuitPattern(patt);
-    currentSuitPalette = pal;
-    currentSuitColor = col;
+    gConfig.currentSuitPattern->setPattern(patt);
+    gConfig.currentSuitPalette = pal;
+    gConfig.currentSuitColor = col;
+    Serial.print("FULL: Suit[");
+    Serial.print(patt);
+    Serial.print("][");
+    Serial.print(pal.name);
+    Serial.print("][");
+    Serial.print(col.name);
+    Serial.print("]");
   }
   void setupMatrix(String patt, MPal pal = PALETTE_PARTY, MCol col = COLOR_BLUE)
   {
-    currentMatrixPattern = patt;
-    currentMatrixPalette = pal;
-    currentMatrixColor = col;
+    gConfig.currentMatrixPattern->setPattern(patt);
+    gConfig.currentMatrixPalette = pal;
+    gConfig.currentMatrixColor = col;
+    Serial.print("FULL: Matrix[");
+    Serial.print(patt);
+    Serial.print("][");
+    Serial.print(pal.name);
+    Serial.print("][");
+    Serial.print(col.name);
+    Serial.print("]");
   }
   void setupCape(String patt, MPal pal = PALETTE_PARTY, MPal pal2 = PALETTE_PARTY, MCol col = COLOR_BLUE)
   {
-    currentCapePattern = patt;
-    currentCapePalette = pal;
-    currentCapeSecPalette = pal2;
-    currentCapeColor = col;
+    gConfig.currentCapePattern->setPattern(patt);
+    gConfig.currentCapePalette = pal;
+    gConfig.currentCapeSecPalette = pal2;
+    gConfig.currentCapeColor = col;
+    Serial.print("FULL: Cape[");
+    Serial.print(patt);
+    Serial.print("][");
+    Serial.print(pal.name);
+    Serial.print("][");
+    Serial.print(pal2.name);
+    Serial.print("][");
+    Serial.print(col.name);
+    Serial.print("]");
   }
 };
 

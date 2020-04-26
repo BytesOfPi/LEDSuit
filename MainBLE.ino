@@ -69,7 +69,7 @@ void bleSetup()
           BLECharacteristic::PROPERTY_WRITE);
   pCharGetMsg->setCallbacks(new CustomBLECharacteristicCallbacks(BLE_FULL_CALLBACK));
   pCharGetMsg->setValue("Control full outfit");
-
+/*
   //--------------------------------------------------------------
   // Step 4: Setup the Get PATTERN Message Characteristics
   pCharGetMsg = pService->createCharacteristic(
@@ -156,7 +156,7 @@ void bleSetup()
           BLECharacteristic::PROPERTY_WRITE);
   pCharGetMsg->setCallbacks(new CustomBLECharacteristicCallbacks(BLE_MATRIX_TIMER_CALLBACK));
   pCharGetMsg->setValue("Matrix Timer");
-
+*/
   //--------------------------------------------------------------
   // Step 9: Start Service
   pService->start();

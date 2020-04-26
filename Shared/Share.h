@@ -42,45 +42,8 @@ const TProgmemPalette16 myChristmasPalette_p PROGMEM =
         CRGB::Gray, CRGB::Red, CRGB::Green, CRGB::SaddleBrown};
 
 //#################################################################
-// Shared Values
-typedef struct MPal
-{
-    CRGBPalette16 pal;
-    String name;
-};
-MPal PALETTE_PARTY = {(CRGBPalette16)PartyColors_p, "Party"};
-MPal PALETTE_CLOUD = {(CRGBPalette16)CloudColors_p, "Cloud"};
-MPal PALETTE_LAVA = {(CRGBPalette16)LavaColors_p, "Lava"};
-MPal PALETTE_OCEAN = {(CRGBPalette16)OceanColors_p, "Ocean"};
-MPal PALETTE_FOREST = {(CRGBPalette16)ForestColors_p, "Forest"};
-MPal PALETTE_RAINBOW = {(CRGBPalette16)RainbowStripeColors_p, "Rainbow"};
-MPal PALETTE_HEAT = {(CRGBPalette16)HeatColors_p, "Heat"};
-MPal PALETTE_CCHS = {(CRGBPalette16)myCCHS1Palette_p, "CCHS"};
-MPal PALETTE_RWB = {(CRGBPalette16)myRedWhiteBluePalette_p, "RWB"};
-MPal PALETTE_CMAS = {(CRGBPalette16)myChristmasPalette_p, "Christmas"};
-
-#define PALETTE_NUM 10
-MPal arrMPal[] = {PALETTE_PARTY, PALETTE_CLOUD, PALETTE_LAVA, PALETTE_OCEAN,
-                  PALETTE_FOREST, PALETTE_RAINBOW, PALETTE_HEAT, PALETTE_CCHS,
-                  PALETTE_RWB, PALETTE_CMAS};
-
-typedef struct MCol
-{
-    CRGB pal;
-    String name;
-};
-// http://fastled.io/docs/3.1/pixeltypes_8h_source.html#l00090
-MCol COLOR_RED = {CRGB::Red, "Red"};
-MCol COLOR_ORANGE = {CRGB::Orange, "Orange"};
-MCol COLOR_YELLOW = {CRGB::Yellow, "Yellow"};
-MCol COLOR_GREEN = {CRGB::Green, "Green"};
-MCol COLOR_BLUE = {CRGB::Blue, "Blue"};
-MCol COLOR_VIOLET = {CRGB::Violet, "Violet"};
-MCol COLOR_IVORY = {CRGB::Ivory, "Ivory"};
-
-#define COLOR_NUM 7
-MCol arrMCol[] = {COLOR_RED, COLOR_ORANGE, COLOR_YELLOW, COLOR_GREEN,
-                  COLOR_BLUE, COLOR_VIOLET, COLOR_IVORY};
+// create global config
+#include "GlobalConfig.h"
 
 //#################################################################
 // BLE Shared values
@@ -118,8 +81,6 @@ uint16_t frontMask[] = {CAPE_FRONT_VEIN_01, CAPE_FRONT_VEIN_02, CAPE_FRONT_VEIN_
 uint16_t backMask[] = {CAPE_BACK_VEIN_01, CAPE_BACK_VEIN_02, CAPE_BACK_VEIN_03, CAPE_BACK_VEIN_04, CAPE_BACK_VEIN_05};
 
 // patterns
-#define CAPE_NUM_PATTERNS 7
-#define CAPE_NUM_CYCLE_SKIP 1
 #define CAPE_PATT_CYCLE "cycle"
 #define CAPE_PATT_LIGHTSABER "lightsaber"
 #define CAPE_PATT_SPARKLE "sparkle"
@@ -127,18 +88,23 @@ uint16_t backMask[] = {CAPE_BACK_VEIN_01, CAPE_BACK_VEIN_02, CAPE_BACK_VEIN_03, 
 #define CAPE_PATT_JUGGLE "juggle"
 #define CAPE_PATT_BPM "bpm"
 #define CAPE_PATT_FIRE "fire"
+
+#define CAPE_NUM_PATTERNS 7
 String patternCape[] = {CAPE_PATT_CYCLE, CAPE_PATT_LIGHTSABER,
                         CAPE_PATT_SPARKLE, CAPE_PATT_EXTEND,
                         CAPE_PATT_JUGGLE, CAPE_PATT_BPM,
                         CAPE_PATT_FIRE};
+#define CAPE_NUM_CYCLE_SKIP 1
 String patternCapeCycleSkip[] = {CAPE_PATT_CYCLE};
+
+// gConfig.currentCapePattern = new CPattern("cape", patternCape, CAPE_NUM_PATTERNS, patternCapeCycleSkip, CAPE_NUM_CYCLE_SKIP);
 
 //--------------------------------------------------------------
 // Current Cape configuration
-String currentCapePattern = CAPE_PATT_CYCLE;
-MPal currentCapePalette = PALETTE_PARTY;
-MPal currentCapeSecPalette = PALETTE_FOREST;
-MCol currentCapeColor = COLOR_BLUE;
+// gConfig.currentCapePattern = CAPE_PATT_CYCLE;
+// gConfig.currentCapePalette = PALETTE_PARTY;
+// gConfig.currentCapeSecPalette = PALETTE_FOREST;
+// gConfig.currentCapeColor = COLOR_BLUE;
 
 //#################################################################
 // Shared Matrix Values
@@ -170,11 +136,13 @@ String patternMatrix[] = {MATRIX_PATT_CYCLE, MATRIX_PATT_FIRE,
 #define MATRIX_NUM_CYCLE_SKIP 2
 String patternMatrixCycleSkip[] = {MATRIX_PATT_CYCLE, MATRIX_PATT_CUSTOM};
 
+// gConfig.currentMatrixPattern = new CPattern("matrix", patternMatrix, MATRIX_NUM_PATTERNS, patternMatrixCycleSkip, MATRIX_NUM_CYCLE_SKIP);
+
 //--------------------------------------------------------------
 // Current Matrix configuration
-String currentMatrixPattern = MATRIX_PATT_CYCLE;
-MPal currentMatrixPalette = PALETTE_PARTY;
-MCol currentMatrixColor = COLOR_BLUE;
+// gConfig.currentMatrixPattern = MATRIX_PATT_CYCLE;
+// gConfig.currentMatrixPalette = PALETTE_PARTY;
+// gConfig.currentMatrixColor = COLOR_BLUE;
 
 //#################################################################
 // Shared Suit Values
@@ -219,33 +187,50 @@ String patternSuit[] = {SUIT_PATT_CYCLE, SUIT_PATT_CCHS, SUIT_PATT_CCHS2, SUIT_P
 #define SUIT_NUM_CYCLE_SKIP 1
 String patternSuitCycleSkip[] = {SUIT_PATT_CYCLE};
 
+// gConfig.currentSuitPattern = new CPattern("suit", patternSuit, SUIT_NUM_PATTERNS, patternSuitCycleSkip, SUIT_NUM_CYCLE_SKIP);
+
 //--------------------------------------------------------------
 // Current Suit configuration
-String currentSuitPattern = SUIT_PATT_CYCLE;
-MPal currentSuitPalette = PALETTE_PARTY;
-MCol currentSuitColor = COLOR_BLUE;
+// gConfig.currentSuitPattern = SUIT_PATT_CYCLE;
+// gConfig.currentSuitPalette = PALETTE_PARTY;
+// gConfig.currentSuitColor = COLOR_BLUE;
 
 //#################################################################
 // Full Outfit Combo
 #define FULL_PATT_CYCLE "cycle"
 #define FULL_PATT_BPM "bpm"
 #define FULL_PATT_CCHS "CCHS"
+#define FULL_PATT_JUGGLE "juggle"
+#define FULL_PATT_BTS "bts"
 
 //#################################################################
-// Determine if string is in list
-bool inList(String val, String list[], uint16_t listSize)
-{
-    for (int i = 0; i <= listSize; i++)
-    {
-        // if we find the selected pattern, set the index
-        if (val.equalsIgnoreCase(list[i]))
-        {
-            return true;
-        }
-    }
-    return false;
-}
+// create global config
+GlobalConfig gConfig(
+    new CPattern("cape", patternCape, CAPE_NUM_PATTERNS, patternCapeCycleSkip, CAPE_NUM_CYCLE_SKIP),
+    new CPattern("matrix", patternMatrix, MATRIX_NUM_PATTERNS, patternMatrixCycleSkip, MATRIX_NUM_CYCLE_SKIP),
+    new CPattern("suit", patternSuit, SUIT_NUM_PATTERNS, patternSuitCycleSkip, SUIT_NUM_CYCLE_SKIP));
 
+/*
+ * bleSuitPattern()
+ * This method is called from Bluetooth and directs what pattern
+ * the suit will take on.
+ */
+void blePattern(String val, uint8_t callback)
+{
+    switch (callback)
+    {
+    // Set component pattern
+    case BLE_SUIT_PATT_CALLBACK:
+        gConfig.currentSuitPattern->setPattern(val);
+        break;
+    case BLE_MATRIX_PATT_CALLBACK:
+        gConfig.currentMatrixPattern->setPattern(val);
+        break;
+    case BLE_CAPE_PATT_CALLBACK:
+        gConfig.currentCapePattern->setPattern(val);
+        break;
+    }
+}
 /*
  * blePalette()
  * This method is called from Bluetooth and directs what the 
@@ -260,16 +245,16 @@ void blePalette(String val, uint8_t callback)
             switch (callback)
             {
             case BLE_SUIT_PAL_CALLBACK:
-                currentSuitPalette = arrMPal[i];
+                gConfig.currentSuitPalette = arrMPal[i];
                 return;
             case BLE_MATRIX_PAL_CALLBACK:
-                currentMatrixPalette = arrMPal[i];
+                gConfig.currentMatrixPalette = arrMPal[i];
                 return;
             case BLE_CAPE_PAL_CALLBACK:
-                currentCapePalette = arrMPal[i];
+                gConfig.currentCapePalette = arrMPal[i];
                 return;
             case BLE_CAPE_PAL_SEC_CALLBACK:
-                currentCapeSecPalette = arrMPal[i];
+                gConfig.currentCapeSecPalette = arrMPal[i];
                 return;
             }
         }
@@ -290,18 +275,17 @@ void bleColor(String val, uint8_t callback)
             switch (callback)
             {
             case BLE_SUIT_COL_CALLBACK:
-                currentSuitColor = arrMCol[i];
+                gConfig.currentSuitColor = arrMCol[i];
                 return;
             case BLE_MATRIX_COL_CALLBACK:
-                currentMatrixColor = arrMCol[i];
+                gConfig.currentMatrixColor = arrMCol[i];
                 return;
             case BLE_CAPE_COL_CALLBACK:
-                currentCapeColor = arrMCol[i];
+                gConfig.currentCapeColor = arrMCol[i];
                 return;
             }
         }
     }
 }
-
 
 #endif

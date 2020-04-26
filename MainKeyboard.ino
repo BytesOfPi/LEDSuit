@@ -40,6 +40,10 @@ void addKey(char val)
   holdKeys[len-1] = val;
 }
 
+void alertPattern()
+{
+  Serial.print(PATTERN_NUMBER);
+}
 void setPattern()
 {
   PATTERN_NUMBER=String(holdKeys).toInt();
@@ -70,11 +74,13 @@ void keyboardCycleLoop() {
   {
   if ( key == '1' ) 
     {
-      prevSuitPattern();
+      Serial.println("FIX ME");
+      // prevSuitPattern();
     }
   if ( key == '2' ) 
     {
-      nextSuitPattern();
+      Serial.println("FIX ME");
+      // nextSuitPattern();
     }
   if ( key == '*' ) 
     {

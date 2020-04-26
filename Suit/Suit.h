@@ -78,7 +78,7 @@ private:
 public:
     //--------------------------------------------------------------
     // Constructor
-    Suit() : ComponentLED("Suit", currentSuitPattern, patternSuit, SUIT_NUM_PATTERNS, patternSuitCycleSkip, SUIT_NUM_CYCLE_SKIP) {}
+    Suit() : ComponentLED("Suit", gConfig.currentSuitPattern) {}
 
     /**
      * setup()
@@ -96,10 +96,6 @@ public:
 
         // set master brightness control
         FastLED.setBrightness(BRIGHTNESS);
-
-        //------------------------------------------------------------
-        // Get to next safe cycle
-        cycleNext();
     }
 
     /**
@@ -109,20 +105,15 @@ public:
        */
     virtual void switchPattern()
     {
-        Serial.print("Suit: ["); Serial.print(currentPatt.equals("cycle") ? patternSuit[cyclePattIndex] : currentPatt); Serial.println("]");
+        printCurrentPattern();
     }
-    
+
     /**
      * drawPattern()
      * Given a specific pattern string, draw the related pattern.
      */
     virtual unsigned int drawPattern(String patt)
     {
-        //--------------------------------------------------------------
-        // Cycle
-        if (patt.equals("cycle"))
-            return cycle();
-
         //--------------------------------------------------------------
         // Palettes
         if (patt.equals("paletteCCHS"))
@@ -220,7 +211,8 @@ public:
         // Switch cycle() pattern every 10 seconds
         EVERY_N_SECONDS(10)
         {
-            cycleNext();
+            printCurrentPattern();
+            patt->cycleNext();
         }
     }
 
@@ -463,42 +455,6 @@ public:
         return mixSpec(ForestColors_p, LINEARBLEND, startIndex);
     }
 
-    //#################################################################
-    // Cycle patterns
-    // boolean skipCycle()
-    // {
-    //     //------------------------------------------------------------
-    //     // Loop through skip cycles
-    //     for (int i = 0; i < NUM_SKIP_CYCLES; i++)
-    //     {
-    //         //------------------------------------------------------------
-    //         // if the pattern is in list of skip cycles, return true
-    //         if (gPattName[CYCLE_PATTERN_NUMBER].equals(skipCycles[i]))
-    //         {
-    //             return true;
-    //         }
-    //     }
-    //     return false;
-    // }
-
-    // int cycle()
-    // {
-    //     EVERY_N_MILLIS_I(cycleTimer, CYCLE_MILLISECONDS)
-    //     {
-    //         //------------------------------------------------------------
-    //         // Cycle to the next safe pattern... if that pattern is itself
-    //         // skip it... (avoid recursive call)
-    //         CYCLE_PATTERN_NUMBER = SAFE_NEXT_PATTERN(CYCLE_PATTERN_NUMBER);
-    //         while (skipCycle())
-    //         {
-    //             CYCLE_PATTERN_NUMBER = SAFE_NEXT_PATTERN(CYCLE_PATTERN_NUMBER);
-    //         }
-// 
-    //         Serial.println("Running Pattern: [" + gPattName[CYCLE_PATTERN_NUMBER] + "] ");
-    //     }
-    //     // Call the rotated pattern pattern
-    //     return drawPattern(gPattName[CYCLE_PATTERN_NUMBER]);
-    // }
 };
 
 #endif

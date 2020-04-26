@@ -50,7 +50,12 @@
 #define NUM_LEDS_CAPE_RIGHT_04 46
 #define NUM_LEDS_CAPE_RIGHT_05 46
 
-class Cape
+//################################################################################
+// Shared variable libraries
+#include "../Shared/Share.h"
+#include "../Shared/Component.h"
+
+class Cape : public ComponentLED
 {
 private:
     CRGB capeLedsLeft[NUM_LEDS_CAPE_LEFT];
@@ -61,13 +66,12 @@ private:
 
     uint8_t capeHue = 0;        // rotating "base color" used by many of the patterns
     byte capeOffset = 0;        // rotating offset used to push theater patterns on
-    uint8_t cyclePattIndex = 0; // determine which pattern
     uint8_t startIndex = 0;
 
-    String thisPattern = CAPE_PATT_CYCLE;
-
 public:
-    Cape() {}
+    //--------------------------------------------------------------
+    // Constructor
+    Cape() : ComponentLED("Cape", gConfig.currentCapePattern) {}
 
     /**
      * setup()
@@ -92,96 +96,6 @@ public:
                            NUM_LEDS_CAPE_RIGHT_05};
         lWing.setup(capeLedsLeft, NUM_LEDS_CAPE_LEFT, leftLens, "Left");
         rWing.setup(capeLedsRight, NUM_LEDS_CAPE_RIGHT, rightLens, "Right");
-
-        //------------------------------------------------------------
-        // Get to next safe cycle
-        cycleNext();
-    }
-
-    /**
-     * drawFrame()
-     * This method is called each time through the Arduino loop to draw the next
-     * frame.
-     */
-    virtual unsigned int drawFrame()
-    {
-        // Periodic adjustment to variables
-        periodicAdjust();
-
-        return drawPatt(currentCapePattern);
-    };
-
-    /**
-     * drawPatt()
-     * Given a specific pattern string, draw the related pattern.
-     */
-    int drawPatt(String patt)
-    {
-        //------------------------------------------------------------
-        // If pattern isn't cycle and it doesn't match this class pattern,
-        // we switched patterns and need to alert everyone
-        if(!patt.equals(CAPE_PATT_CYCLE) && !patt.equals(thisPattern))
-        {
-            switchPattern();
-            thisPattern = patt;
-        }
-        //------------------------------------------------------------
-        // Draw the pattern
-        if (patt.equals(CAPE_PATT_CYCLE)) return cycle();
-        if (patt.equals(CAPE_PATT_LIGHTSABER)) return patternLightsaber();
-        if (patt.equals(CAPE_PATT_SPARKLE)) return patternSparkle();
-        if (patt.equals(CAPE_PATT_EXTEND)) return patternExtend();
-        if (patt.equals(CAPE_PATT_JUGGLE)) return patternJuggle();
-        if (patt.equals(CAPE_PATT_BPM)) return patternBPM();
-        if (patt.equals(CAPE_PATT_FIRE)) return patternFire();
-
-        return 0;
-    }
-
-    /**
-     * cycle()
-     * Tell object to draw the next safe cycled pattern
-     */
-    int cycle()
-    {
-        return drawPatt(patternCape[cyclePattIndex]);
-    }
-
-    /**
-     * cycleSkip()
-     * Check if the pattern is in the list of patterns that should be
-     * skipped. 
-     */
-    bool cycleSkip(String patt)
-    {
-        for (uint8_t i = 0; i < CAPE_NUM_CYCLE_SKIP; i++)
-        {
-            if (patternCapeCycleSkip[i].equals(patt))
-                return true;
-        }
-        return false;
-    }
-
-    /**
-     * cycleNext()
-     * Go to the next safe cycle pattern index
-     */
-    void cycleNext()
-    {
-        //------------------------------------------------------------
-        // Get next safe index
-        cyclePattIndex = (cyclePattIndex == CAPE_NUM_PATTERNS - 1) ? 0 : cyclePattIndex + 1;
-
-        //------------------------------------------------------------
-        // while the pattern is in the skip list, increment to next
-        // pattern
-        while (cycleSkip(patternCape[cyclePattIndex]))
-        {
-            cyclePattIndex = (cyclePattIndex == CAPE_NUM_PATTERNS - 1) ? 0 : cyclePattIndex + 1;
-        }
-        //------------------------------------------------------------
-        // Alert everyone we're going to the next pattern
-        switchPattern();
     }
 
     /**
@@ -191,8 +105,27 @@ public:
      */
     void switchPattern()
     {
+        printCurrentPattern();
         lWing.switchPattern();
         rWing.switchPattern();
+    }
+
+    /**
+     * drawPatt()
+     * Given a specific pattern string, draw the related pattern.
+     */
+    virtual unsigned int drawPattern(String patt)
+    {
+        //------------------------------------------------------------
+        // Draw the pattern
+        if (patt.equals(CAPE_PATT_LIGHTSABER)) return patternLightsaber();
+        if (patt.equals(CAPE_PATT_SPARKLE)) return patternSparkle();
+        if (patt.equals(CAPE_PATT_EXTEND)) return patternExtend();
+        if (patt.equals(CAPE_PATT_JUGGLE)) return patternJuggle();
+        if (patt.equals(CAPE_PATT_BPM)) return patternBPM();
+        if (patt.equals(CAPE_PATT_FIRE)) return patternFire();
+
+        return 0;
     }
 
     /**
@@ -223,7 +156,11 @@ public:
 
         //--------------------------------------------------------------
         // Switch cycle() pattern every 10 seconds
-        EVERY_N_SECONDS(10) { cycleNext(); }
+        EVERY_N_SECONDS(10)
+        {
+            printCurrentPattern();
+            patt->cycleNext();
+        }
     }
 
     //#################################################################
