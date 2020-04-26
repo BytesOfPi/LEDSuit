@@ -23,6 +23,8 @@
 #ifndef Cape_H
 #define Cape_H
 
+#include "../Shared/Share.h"
+
 #include "Wing.h"
 
 #define LED_TYPE_CAPE WS2812B
@@ -48,8 +50,6 @@
 #define NUM_LEDS_CAPE_RIGHT_04 46
 #define NUM_LEDS_CAPE_RIGHT_05 46
 
-#define NUM_CAPE_PATTERNS 5
-
 class Cape
 {
 private:
@@ -59,24 +59,159 @@ private:
     Wing lWing = Wing();
     Wing rWing = Wing();
 
-    uint8_t capeHue = 0; // rotating "base color" used by many of the patterns
-    byte capeOffset = 0; // rotating offset used to push theater patterns on
-    uint8_t capePatt = 0; // determine which pattern
+    uint8_t capeHue = 0;        // rotating "base color" used by many of the patterns
+    byte capeOffset = 0;        // rotating offset used to push theater patterns on
+    uint8_t cyclePattIndex = 0; // determine which pattern
     uint8_t startIndex = 0;
+
+    String thisPattern = CAPE_PATT_CYCLE;
 
 public:
     Cape() {}
 
-    void switchPattern()
+    /**
+     * setup()
+     * This method initializes the LEDs and the class variables.
+     */
+    void setup()
     {
-        capePatt = (capePatt == NUM_CAPE_PATTERNS - 1 ) ? 0 : capePatt + 1;
+        // Setup LED arrays
+        FastLED.addLeds<LED_TYPE_CAPE, DATA_PIN_CAPE_LEFT, COLOR_ORDER_CAPE>(capeLedsLeft, 0, NUM_LEDS_CAPE_LEFT).setCorrection(TypicalLEDStrip);
+        FastLED.addLeds<LED_TYPE_CAPE, DATA_PIN_CAPE_RIGHT, COLOR_ORDER_CAPE>(capeLedsRight, 0, NUM_LEDS_CAPE_RIGHT).setCorrection(TypicalLEDStrip);
+
+        // Setup Left and Right Wing
+        int leftLens[] = {NUM_LEDS_CAPE_LEFT_01,
+                          NUM_LEDS_CAPE_LEFT_02,
+                          NUM_LEDS_CAPE_LEFT_03,
+                          NUM_LEDS_CAPE_LEFT_04,
+                          NUM_LEDS_CAPE_LEFT_05};
+        int rightLens[] = {NUM_LEDS_CAPE_RIGHT_01,
+                           NUM_LEDS_CAPE_RIGHT_02,
+                           NUM_LEDS_CAPE_RIGHT_03,
+                           NUM_LEDS_CAPE_RIGHT_04,
+                           NUM_LEDS_CAPE_RIGHT_05};
+        lWing.setup(capeLedsLeft, NUM_LEDS_CAPE_LEFT, leftLens, "Left");
+        rWing.setup(capeLedsRight, NUM_LEDS_CAPE_RIGHT, rightLens, "Right");
+
+        //------------------------------------------------------------
+        // Get to next safe cycle
+        cycleNext();
     }
 
+    /**
+     * drawFrame()
+     * This method is called each time through the Arduino loop to draw the next
+     * frame.
+     */
+    virtual unsigned int drawFrame()
+    {
+        // Periodic adjustment to variables
+        periodicAdjust();
+
+        return drawPatt(currentCapePattern);
+    };
+
+    /**
+     * drawPatt()
+     * Given a specific pattern string, draw the related pattern.
+     */
+    int drawPatt(String patt)
+    {
+        //------------------------------------------------------------
+        // If pattern isn't cycle and it doesn't match this class pattern,
+        // we switched patterns and need to alert everyone
+        if(!patt.equals(CAPE_PATT_CYCLE) && !patt.equals(thisPattern))
+        {
+            switchPattern();
+            thisPattern = patt;
+        }
+        //------------------------------------------------------------
+        // Draw the pattern
+        if (patt.equals(CAPE_PATT_CYCLE)) return cycle();
+        if (patt.equals(CAPE_PATT_LIGHTSABER)) return patternLightsaber();
+        if (patt.equals(CAPE_PATT_SPARKLE)) return patternSparkle();
+        if (patt.equals(CAPE_PATT_EXTEND)) return patternExtend();
+        if (patt.equals(CAPE_PATT_JUGGLE)) return patternJuggle();
+        if (patt.equals(CAPE_PATT_BPM)) return patternBPM();
+        if (patt.equals(CAPE_PATT_FIRE)) return patternFire();
+
+        return 0;
+    }
+
+    /**
+     * cycle()
+     * Tell object to draw the next safe cycled pattern
+     */
+    int cycle()
+    {
+        return drawPatt(patternCape[cyclePattIndex]);
+    }
+
+    /**
+     * cycleSkip()
+     * Check if the pattern is in the list of patterns that should be
+     * skipped. 
+     */
+    bool cycleSkip(String patt)
+    {
+        for (uint8_t i = 0; i < CAPE_NUM_CYCLE_SKIP; i++)
+        {
+            if (patternCapeCycleSkip[i].equals(patt))
+                return true;
+        }
+        return false;
+    }
+
+    /**
+     * cycleNext()
+     * Go to the next safe cycle pattern index
+     */
+    void cycleNext()
+    {
+        //------------------------------------------------------------
+        // Get next safe index
+        cyclePattIndex = (cyclePattIndex == CAPE_NUM_PATTERNS - 1) ? 0 : cyclePattIndex + 1;
+
+        //------------------------------------------------------------
+        // while the pattern is in the skip list, increment to next
+        // pattern
+        while (cycleSkip(patternCape[cyclePattIndex]))
+        {
+            cyclePattIndex = (cyclePattIndex == CAPE_NUM_PATTERNS - 1) ? 0 : cyclePattIndex + 1;
+        }
+        //------------------------------------------------------------
+        // Alert everyone we're going to the next pattern
+        switchPattern();
+    }
+
+    /**
+     * switchPattern()
+     * This method is called every time there is a pattern switch.  This will allow
+     * us to reset any stored values that patterns use 
+     */
+    void switchPattern()
+    {
+        lWing.switchPattern();
+        rWing.switchPattern();
+    }
+
+    /**
+     * periodicAdjust()
+     * This method defines the periodic adjustments to class variables that
+     * keep the patterns moving 
+     */
     void periodicAdjust()
     {
-        // do some periodic updates
-        EVERY_N_MILLISECONDS(20) { capeHue++; } // slowly cycle the "base color" through the rainbow
+        //--------------------------------------------------------------
+        // Used only for palette patterns to move the pattern along strand
+        startIndex = startIndex + 1; /* motion speed */
 
+        //--------------------------------------------------------------
+        // slowly cycle the "base color" through the rainbow
+        EVERY_N_MILLISECONDS(20) { capeHue++; }
+
+        //--------------------------------------------------------------
+        // slowly push rotating offset
         EVERY_N_MILLISECONDS(100)
         {
             capeOffset++;
@@ -84,100 +219,103 @@ public:
             {
                 capeOffset = 0;
             }
-        } // slowly push rotating offset
-
-        EVERY_N_SECONDS(10) { capePatt = (capePatt == NUM_CAPE_PATTERNS - 1 ) ? 0 : capePatt + 1; }
-    }
-
-
-    void setup()
-    {
-        // Setup LED arrays
-        FastLED.addLeds<LED_TYPE_CAPE, DATA_PIN_CAPE_LEFT, COLOR_ORDER_CAPE>(capeLedsLeft, 0, NUM_LEDS_CAPE_LEFT).setCorrection(TypicalLEDStrip);
-        FastLED.addLeds<LED_TYPE_CAPE, DATA_PIN_CAPE_RIGHT, COLOR_ORDER_CAPE>(capeLedsRight, 0, NUM_LEDS_CAPE_RIGHT).setCorrection(TypicalLEDStrip);
-        
-        // Setup Left and Right Wing
-        int leftLens[] = { NUM_LEDS_CAPE_LEFT_01,
-                        NUM_LEDS_CAPE_LEFT_02,
-                        NUM_LEDS_CAPE_LEFT_03,
-                        NUM_LEDS_CAPE_LEFT_04,
-                        NUM_LEDS_CAPE_LEFT_05 };
-        int rightLens[] = { NUM_LEDS_CAPE_RIGHT_01,
-                        NUM_LEDS_CAPE_RIGHT_02,
-                        NUM_LEDS_CAPE_RIGHT_03,
-                        NUM_LEDS_CAPE_RIGHT_04,
-                        NUM_LEDS_CAPE_RIGHT_05 };           
-        lWing.setup( capeLedsLeft, NUM_LEDS_CAPE_LEFT, leftLens );
-        rWing.setup( capeLedsRight, NUM_LEDS_CAPE_RIGHT, rightLens );
-    }
-
-    virtual unsigned int drawFrame()
-    {
-        // Used only for palette patterns to move the pattern along strand
-        startIndex = startIndex + 1; /* motion speed */
-
-        // TODO: Run capeBPM() pattern for now
-        switch( capePatt )
-        {
-            case 0: patternFire(); break;
-            case 1: patternSparkle(); break;
-            case 2: patternLightsaber(); break;
-            case 3: patternJuggle(); break;
-            case 4: patternBPM(); break;
         }
 
-        // Periodic adjustment to variables
-        periodicAdjust();
+        //--------------------------------------------------------------
+        // Switch cycle() pattern every 10 seconds
+        EVERY_N_SECONDS(10) { cycleNext(); }
+    }
 
-        return 0;
-    };
-
-    void patternBPM()
+    //#################################################################
+    // PATTERNS
+    //#################################################################
+    int patternBPM()
     {
         // colored stripes pulsing at a defined Beats-Per-Minute (BPM)
         uint8_t BeatsPerMinute = 62;
         uint8_t beat = beatsin8(BeatsPerMinute, 64, 255);
         //for (int i = 0; i < NUM_LEDS_CAPE_LEFT; i++)
-        CRGB* newRGB; 
+        CRGB *newRGB;
         for (int i = 0; i < NUM_LEDS_CAPE_RIGHT; i++)
         {
             capeLedsRight[i] = ColorFromPalette(PartyColors_p, capeHue + (i * 2), beat - capeHue + (i * 10));
-            if ( i < NUM_LEDS_CAPE_LEFT )
+            if (i < NUM_LEDS_CAPE_LEFT)
             {
-            capeLedsLeft[i] = capeLedsRight[i];
+                capeLedsLeft[i] = capeLedsRight[i];
             }
         }
+        return 1;
     }
 
-    void patternJuggle()
+    int patternJuggle()
     {
         // colored stripes pulsing at a defined Beats-Per-Minute (BPM)
         lWing.patternJuggle();
         rWing.patternJuggle();
+        return 1;
     }
 
-    void patternSparkle()
+    int patternSparkle()
     {
         // Sparkling field on front and back of cape
         lWing.patternPaletteConfetti(ForestColors_p, OceanColors_p, LINEARBLEND);
         rWing.patternPaletteConfetti(ForestColors_p, OceanColors_p, LINEARBLEND);
+        return 1;
     }
 
-    void patternLightsaber()
+    int patternExtend()
     {
         // Sparkling field on front and back of cape
-        lWing.patternLightsaber();
-        rWing.patternLightsaber();
+        lWing.patternExtend();
+        rWing.patternExtend();
+        return 1;
     }
 
-    void patternFire()
+    int patternFire()
     {
         // Fire?
         lWing.patternFire();
         rWing.patternFire();
+        return 1;
     }
 
+    int patternLightsaber()
+    {
+        //------------------------------------------------------------
+        // Fade to black fast
+        fadeToBlackBy(capeLedsLeft, NUM_LEDS_CAPE_LEFT, 80);
+        fadeToBlackBy(capeLedsRight, NUM_LEDS_CAPE_RIGHT, 80);
 
+        //------------------------------------------------------------
+        // Using beatsin8, get a position between -5 and 35
+        // Constrain the highs and lows to 0 and 30 (stay at end longer)
+        // Map that range between 0 and 10 to turn on correct sabers
+        uint8_t beat = constrain((int)map(beatsin8(6, 0, 40), 40, 0, 0, 40) - 5, 0, 30);
+        beat = map(beat, 0, 30, 0, 10);
+        uint16_t myLeftMask = 0, myRightMask = 0;
+        uint8_t minLeft = min((int)beat, 5);
+
+        //------------------------------------------------------------
+        // Turn on left veins if position between 1-5
+        for (int i = 1; i <= minLeft; i++)
+        {
+            myLeftMask |= frontMask[i - 1];
+            myLeftMask |= backMask[i - 1];
+        }
+        //------------------------------------------------------------
+        // Turn on right veins if position between 6-10
+        for (int i = 6; i <= beat; i++)
+        {
+            myRightMask |= frontMask[10 - i];
+            myRightMask |= backMask[10 - i];
+        }
+
+        //------------------------------------------------------------
+        // Draw sabers
+        lWing.patternLightsaber(myLeftMask);
+        rWing.patternLightsaber(myRightMask);
+        return 1;
+    }
 };
 
 #endif

@@ -49,7 +49,7 @@ private:
 public:
     //--------------------------------------------------------------
     // Constructor
-    PatternPulse(uint8_t w, uint8_t h) : Drawable("PatternPulse", w, h) {}
+    PatternPulse(uint8_t w, uint8_t h) : Drawable(MATRIX_PATT_PULSE, w, h) {}
 
     /* drawFrame()
      * Primary method that draws the next frame

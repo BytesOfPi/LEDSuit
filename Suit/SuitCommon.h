@@ -65,12 +65,13 @@ void setLEDs(CRGB myLeds[], int ledStart, int ledEnd, CRGB color)
  * addGlitter()
  * modifies certain random pixels with white to cause sparkle
  */
-void addGlitter(CRGB myLeds[], int numLeds, fract8 chanceOfGlitter)
+int addGlitter(CRGB myLeds[], int numLeds, fract8 chanceOfGlitter)
 {
   if (random8() < chanceOfGlitter)
   {
     myLeds[random16(numLeds)] += CRGB::White;
   }
+  return 1;
 }
 
 /*
@@ -78,7 +79,7 @@ void addGlitter(CRGB myLeds[], int numLeds, fract8 chanceOfGlitter)
  * Takes a palette and pulses it back and forth each second causing it
  * to slightly move down the chain... each color is gradually faded
  */
-void bpm(CRGB myLeds[], int numLeds, uint8_t myHue, CRGBPalette16 palette)
+int bpm(CRGB myLeds[], int numLeds, uint8_t myHue, CRGBPalette16 palette)
 {
   // colored stripes pulsing at a defined Beats-Per-Minute (BPM)
   uint8_t BeatsPerMinute = 62;
@@ -87,13 +88,14 @@ void bpm(CRGB myLeds[], int numLeds, uint8_t myHue, CRGBPalette16 palette)
   {
     myLeds[i] = ColorFromPalette(palette, myHue + (i * 2), beat - myHue + (i * 10));
   }
+  return 1;
 }
 
 /*
  * theater()
  * Display a pallet in theater scroll
  */
-void theater(CRGB myLeds[], int numLeds, int offset, CRGBPalette16 pal)
+int theater(CRGB myLeds[], int numLeds, int offset, CRGBPalette16 pal)
 {
   byte pattOffset = offset % TOT_SCROLL;
   uint8_t brightness = 175;
@@ -126,4 +128,5 @@ void theater(CRGB myLeds[], int numLeds, int offset, CRGBPalette16 pal)
 
     myLeds[i] = nextVal;
   }
+  return 1;
 }

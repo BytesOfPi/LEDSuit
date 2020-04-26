@@ -41,7 +41,7 @@ private:
 public:
     //--------------------------------------------------------------
     // Constructor
-    PatternSwirl(uint8_t w, uint8_t h) : Drawable("PatternSwirl", w, h) {}
+    PatternSwirl(uint8_t w, uint8_t h) : Drawable(MATRIX_PATT_SWIRL, w, h) {}
 
     /* drawFrame()
      * Primary method that draws the next frame

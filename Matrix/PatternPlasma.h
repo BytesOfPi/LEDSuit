@@ -41,7 +41,7 @@ private:
 public:
     //--------------------------------------------------------------
     // Constructor
-    PatternPlasma(uint8_t w, uint8_t h) : Drawable("PatternPlasma", w, h) {}
+    PatternPlasma(uint8_t w, uint8_t h) : Drawable(MATRIX_PATT_PLASMA, w, h) {}
 
     /* drawFrame()
      * Primary method that draws the next frame

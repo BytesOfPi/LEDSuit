@@ -130,7 +130,7 @@ private:
 public:
     //--------------------------------------------------------------
     // Constructor
-    PatternBTS(uint8_t w, uint8_t h) : Drawable("PatternBTS", w, h) {}
+    PatternBTS(uint8_t w, uint8_t h) : Drawable(MATRIX_PATT_BTS, w, h) {}
 
     /* btsLogo()
      * Draw the morphing BTS Logo to BTS Army Logo

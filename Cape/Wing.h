@@ -34,6 +34,7 @@ private:
     int numLeds[NUM_VEIN];
     int totLeds;
     int totSideLeds;
+    String name;
 
 public:
     Vein veinsFront[NUM_VEIN];
@@ -41,10 +42,11 @@ public:
 
     Wing() {}
 
-    void setup(CRGB myLedsIn[], int totLedsIn, int *numLedsIn)
+    void setup(CRGB myLedsIn[], int totLedsIn, int *numLedsIn, String nameIn)
     {
         //--------------------------------------------------------------
         // Store params into class
+        name = nameIn;
         myLeds = myLedsIn;
         totLeds = totLedsIn;
         totSideLeds = totLedsIn / 2;
@@ -96,7 +98,7 @@ public:
         {
             if (index <= veins[i].endPos)
             {
-                return veins[i].getRGB( index - veins[i].startPos );
+                return veins[i].getRGB(index - veins[i].startPos);
             }
         }
         return veins[0].getRGB(0);
@@ -114,7 +116,7 @@ public:
         {
             if (index <= veins[i].endPos)
             {
-                return veins[i].getRGBReverse( index - veins[i].startPos );
+                return veins[i].getRGBReverse(index - veins[i].startPos);
             }
         }
         return veins[0].getRGBReverse(0);
@@ -134,6 +136,9 @@ public:
         }
     }
 
+    //#################################################################
+    // PATTERNS
+    //#################################################################
     /**
      * patternJuggle()
      * This method causes this side of the cape to race a multicolored chaser
@@ -162,26 +167,26 @@ public:
     {
         uint8_t brightness = 175;
         CRGB palsF[8] = {ColorFromPalette(palFront, 0, brightness, NOBLEND),
-                        ColorFromPalette(palFront, 16, brightness, NOBLEND),
-                        ColorFromPalette(palFront, 32, brightness, NOBLEND),
-                        ColorFromPalette(palFront, 48, brightness, NOBLEND),
-                        ColorFromPalette(palFront, 64, brightness, NOBLEND),
-                        ColorFromPalette(palFront, 80, brightness, NOBLEND),
-                        ColorFromPalette(palFront, 96, brightness, NOBLEND),
-                        ColorFromPalette(palFront, 112, brightness, NOBLEND)};
+                         ColorFromPalette(palFront, 16, brightness, NOBLEND),
+                         ColorFromPalette(palFront, 32, brightness, NOBLEND),
+                         ColorFromPalette(palFront, 48, brightness, NOBLEND),
+                         ColorFromPalette(palFront, 64, brightness, NOBLEND),
+                         ColorFromPalette(palFront, 80, brightness, NOBLEND),
+                         ColorFromPalette(palFront, 96, brightness, NOBLEND),
+                         ColorFromPalette(palFront, 112, brightness, NOBLEND)};
         CRGB palsB[8] = {ColorFromPalette(palBack, 0, brightness, NOBLEND),
-                        ColorFromPalette(palBack, 16, brightness, NOBLEND),
-                        ColorFromPalette(palBack, 32, brightness, NOBLEND),
-                        ColorFromPalette(palBack, 48, brightness, NOBLEND),
-                        ColorFromPalette(palBack, 64, brightness, NOBLEND),
-                        ColorFromPalette(palBack, 80, brightness, NOBLEND),
-                        ColorFromPalette(palBack, 96, brightness, NOBLEND),
-                        ColorFromPalette(palBack, 112, brightness, NOBLEND)};
+                         ColorFromPalette(palBack, 16, brightness, NOBLEND),
+                         ColorFromPalette(palBack, 32, brightness, NOBLEND),
+                         ColorFromPalette(palBack, 48, brightness, NOBLEND),
+                         ColorFromPalette(palBack, 64, brightness, NOBLEND),
+                         ColorFromPalette(palBack, 80, brightness, NOBLEND),
+                         ColorFromPalette(palBack, 96, brightness, NOBLEND),
+                         ColorFromPalette(palBack, 112, brightness, NOBLEND)};
         //------------------------------------------------------------
         // random colored speckles that blink in and fade smoothly
         fadeToBlackBy(myLeds, totLeds, 10);
-        int pos1 = random16(0, totSideLeds-1);
-        int pos2 = random16(0, totSideLeds-1);
+        int pos1 = random16(0, totSideLeds - 1);
+        int pos2 = random16(0, totSideLeds - 1);
 
         int randIndex = random8(8);
         CRGB fPal = palsF[randIndex];
@@ -193,24 +198,23 @@ public:
     }
 
     /**
-     * patternLightsaber()
+     * patternExtend()
      * This method causes veins of green to shoot out from backpack and back
      */
-    void patternLightsaber()
+    void patternExtend()
     {
         fadeToBlackBy(myLeds, totLeds, 90); //20
             //------------------------------------------------------------
         // get a position between 0 and 255 for 8 beats per min
         uint8_t range = beatsin8(30, 0, 255);
-        
+
         //------------------------------------------------------------
         // get a position between 0 and 255
-        for( uint8_t i = 0; i < NUM_VEIN; i++ )
+        for (uint8_t i = 0; i < NUM_VEIN; i++)
         {
-            veinsFront[i].patternLightsaber(range);
-            veinsBack[i].patternLightsaber(range, true);
+            veinsFront[i].patternExtend(range);
+            veinsBack[i].patternExtend(range, true);
         }
-        
     }
 
     /**
@@ -228,6 +232,18 @@ public:
         {
             veinsFront[x].patternFire();
             veinsBack[x].patternFire(true);
+        }
+    }
+
+    void patternLightsaber(uint16_t mask)
+    {
+        //------------------------------------------------------------
+        // Loop through veins and turn on if mask is set for that
+        // particular vein
+        for (int x = 0; x < NUM_VEIN; x++)
+        {
+            veinsFront[x].patternLightsaber(mask & frontMask[x]);
+            veinsBack[x].patternLightsaber(mask & backMask[x], true);
         }
     }
 };

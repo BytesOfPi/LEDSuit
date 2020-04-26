@@ -48,7 +48,7 @@ public:
 
     //--------------------------------------------------------------
     // Constructor
-    PatternSpin(uint8_t w, uint8_t h) : Drawable("PatternSpin", w, h) {}
+    PatternSpin(uint8_t w, uint8_t h) : Drawable(MATRIX_PATT_SPIN, w, h) {}
 
     /* start()
      * Call when starting back up

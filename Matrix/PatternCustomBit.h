@@ -94,7 +94,7 @@ private:
 public:
     //--------------------------------------------------------------
     // Constructor
-    PatternCustomBit(uint8_t w, uint8_t h) : Drawable("PatternCustomBit", w, h) {}
+    PatternCustomBit(uint8_t w, uint8_t h) : Drawable(MATRIX_PATT_CUSTOM, w, h) {}
 
     /* blink()
      * Animate blinking eyes

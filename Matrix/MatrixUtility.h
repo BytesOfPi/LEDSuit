@@ -1,6 +1,6 @@
 /*
  * 
- * ???: https://github.com/???
+ * MatrixUtility.h: https://github.com/???
  * Copyright (c) 2020 Nathan DeGroff
  * 
  * Portions of this code were adopted from Effects.h
@@ -32,15 +32,14 @@
 #include <FastLED.h>
 #include <FastLED_GFX.h>
 
+#include "../Shared/Share.h"
 #include "MatrixScroll.h"
 #include "MatrixTimer.h"
 
-#ifndef CANVAS_WIDTH
-#define CANVAS_WIDTH 16
-#define CANVAS_HEIGHT 16
-#define CANVAS_CENTER_X 8
-#define CANVAS_CENTER_Y 8
-#endif
+// #ifndef CANVAS_WIDTH
+// #define CANVAS_WIDTH 16
+// #define CANVAS_HEIGHT 16
+// #endif
 
 #ifndef MatrixUtility_H
 #define MatrixUtility_H
@@ -82,16 +81,6 @@ void bleMatrixScroll(String val)
   }
   // Otherwise, just add string to end message
   scroll.addMsg(val);
-}
-
-/*
- * bleMatrixPattern()
- * This method is called from Bluetooth and directs what actions
- * the global PatternScroll (scroll) class will do.
- */
-void bleMatrixPattern(String val)
-{
-  // TODO
 }
 
 /*

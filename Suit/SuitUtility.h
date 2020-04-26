@@ -37,17 +37,17 @@
 // LED sequence is running
 byte PATTERN_NUMBER = 0;
 
-#define TOT_PATTERN_NUM 29
+#define TOT_PATTERN_NUM 27
 #define MAX_PATTERN_INDEX TOT_PATTERN_NUM - 1
 
 // Hiding rainbows ("rainbow", "paletteRainbowStripe", "rainbowSolid", "paletteParty")
 String gPattName[] = {"cycle",
-                      "paletteCCHS", "paletteCCHS2", "solidCCHS",
+                      "paletteCCHS", "paletteCCHS2",
                       "palletteCCHSGlitter", "twoSplit", "juggle",
                       "confetti", "paletteRWB", "paletteCloud",
                       "paletteLava", "paletteHeat", "paletteOcean", "paletteForest", "paletteChristmas",
                       "bpmParty", "bpmRWB", "bpmChristmas",
-                      "solidBlueGreen", "solidBlue", "solidRed", "solidGreen",
+                      "solidBlue", "solidRed", "solidGreen",
                       "theaterCCHS", "theaterChristmas",
                       "mixinsCCHS", "mixinsLava", "mixSpecLava", "mixSpecOcean", "mixSpecForest"};
 
@@ -66,10 +66,10 @@ void alertPattern()
 }
 
 /*
- * nextPattern()
+ * nextSuitPattern()
  * This method will increment the pattern to the next in list
  */
-void nextPattern()
+void nextSuitPattern()
 {
   PATTERN_NUMBER = SAFE_NEXT_PATTERN(PATTERN_NUMBER);
 
@@ -78,10 +78,10 @@ void nextPattern()
 }
 
 /*
- * prevPattern()
+ * prevSuitPattern()
  * This method will decrement the pattern to the next in list
  */
-void prevPattern()
+void prevSuitPattern()
 {
   PATTERN_NUMBER = SAFE_PREV_PATTERN(PATTERN_NUMBER);
   // alert new pattern change
@@ -92,7 +92,7 @@ void prevPattern()
  * setPattern()
  * This method will take a string pattern and set it if it exists
  */
-void setPattern(String patt)
+void setSuitPattern(String patt)
 {
   // loop through patterns
   for (int i = 0; i <= MAX_PATTERN_INDEX; i++)
@@ -126,26 +126,26 @@ void safePattern()
 }
 
 /*
- * bleSuit()
- * This method is called from Bluetooth and directs what actions
- * the global PatternScroll (scroll) class will do.
+ * bleSuitPattern()
+ * This method is called from Bluetooth and directs what pattern
+ * the suit will take on.
  */
-void bleSuit(String val)
+void bleSuitPattern(String val)
 {
     // If phone sent "back", back up to previous LED pattern
     if (val.equals("back"))
     {
-      prevPattern();
+      prevSuitPattern();
     }
     // If phone sent "next", cycle to next LED pattern
     else if (val.equals("next"))
     {
-      nextPattern();
+      nextSuitPattern();
     }
     // Otherwise, set pattern directly
     else
     {
-      setPattern(val);
+      setSuitPattern(val);
     }
 }
 

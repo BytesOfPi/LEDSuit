@@ -38,32 +38,32 @@
 // Pre defined custom color palettes
 const TProgmemPalette16 annaFirePalette_p PROGMEM =
     {
-      CRGB::Black,
-      CRGB::DarkRed,
-      CRGB::Maroon,
-      CRGB::Maroon,
+        CRGB::Black,
+        CRGB::DarkRed,
+        CRGB::Maroon,
+        CRGB::Maroon,
 
-      0xFF9900,
-      CRGB::Yellow,
-      0xFF9900,
-      CRGB::Orange,
+        0xFF9900,
+        CRGB::Yellow,
+        0xFF9900,
+        CRGB::Orange,
 
-      0xFF9900,
-      CRGB::Orange,
-      CRGB::Maroon,
-      CRGB::DarkRed,
-      
-      CRGB::Maroon,
-      CRGB::Orange,
-      CRGB::Maroon,
-      CRGB::DarkRed
-    };
+        0xFF9900,
+        CRGB::Orange,
+        CRGB::Maroon,
+        CRGB::DarkRed,
+
+        CRGB::Maroon,
+        CRGB::Orange,
+        CRGB::Maroon,
+        CRGB::DarkRed};
 class Vein
 {
 private:
     CRGB *ledsV;
     bool reverse;
     uint8_t *heat;
+    uint8_t extend = 0;
 
 public:
     int startPos;
@@ -78,22 +78,8 @@ public:
         reverse = rev;
         startPos = startPosIn;
         endPos = startPosIn + numLedsIn - 1;
+        // Create an array of size of LEDs for vein
         heat = (uint8_t *)malloc(numLeds * sizeof(uint8_t));
-        Serial.print("Create Vein: [");
-        Serial.print(numLeds);
-        Serial.print("] [");
-        Serial.print(startPos);
-        Serial.print("] [");
-        Serial.print(endPos);
-        Serial.print("] [");
-        Serial.print(rev);
-        Serial.print("] [");
-        Serial.print(ledsV[0][0]);
-        Serial.print("] [");
-        Serial.print(ledsV[0][1]);
-        Serial.print("] [");
-        Serial.print(ledsV[0][2]);
-        Serial.println("]");
     }
 
     /**
@@ -124,18 +110,23 @@ public:
      */
     void switchPattern()
     {
+        extend = 0;
     }
 
-    void patternLightsaber(uint8_t extent, boolean revThis = false)
+    /**
+     * patternExtend()
+     * This method will take value (extent) between 0-255 and draw  
+     */
+    void patternExtend(uint8_t extent, boolean revThis = false, CRGB crgb = CHSV(HUE_GREEN, 255, 255))
     {
         uint8_t point = map(extent, 0, 255, 0, numLeds - 1);
         for (uint8_t i = 0; i < point; i++)
         {
-            getRGB(revThis ? numLeds - i - 1 : i) = CHSV(HUE_GREEN, 255, 255);
+            getRGB(revThis ? numLeds - i - 1 : i) = crgb;
         }
     }
 
-    void patternFire(boolean revThis = false )
+    void patternFire(boolean revThis = false)
     {
         // Step 1.  Cool down every cell a little
         for (uint8_t i = 0; i < numLeds; i++)
@@ -161,6 +152,31 @@ public:
             // for best results with color palettes.
             byte colorindex = scale8(heat[j], 240); // HeatColors_p, LavaColors_p
             getRGB(revThis ? numLeds - j - 1 : j) = (colorindex != 0) ? ColorFromPalette(annaFirePalette_p, colorindex) : CRGB::Black;
+        }
+    }
+
+    /**
+     * patternExtend()
+     * This method will take value (extent) between 0-255 and draw  
+     */
+    void patternLightsaber(bool on, boolean revThis = false)
+    {
+        int hold = extend;
+        //------------------------------------------------------------
+        // If saber is on but not fully extended, keep extending
+        if (on && extend <= 255)
+        {
+            extend = min(hold + 10, 255);
+            patternExtend(extend, revThis);
+            return;
+        }
+        //------------------------------------------------------------
+        // If saber is off but not fully extinguished, keep retracting
+        if (!on && extend > 0)
+        {
+            extend = max(hold - 10, 0);
+            patternExtend(extend, revThis);
+            return;
         }
     }
 };

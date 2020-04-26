@@ -52,7 +52,7 @@ private:
 public:
     //--------------------------------------------------------------
     // Constructor
-    PatternWave(uint8_t w, uint8_t h) : Drawable("PatternWave", w, h) {}
+    PatternWave(uint8_t w, uint8_t h) : Drawable(MATRIX_PATT_WAVE, w, h) {}
 
     void shiftPattern()
     {

@@ -37,7 +37,7 @@ private:
 public:
     //--------------------------------------------------------------
     // Constructor
-    PatternFire(uint8_t w, uint8_t h) : Drawable("PatternFire", w, h) {}
+    PatternFire(uint8_t w, uint8_t h) : Drawable(MATRIX_PATT_FIRE, w, h) {}
 
     // There are two main parameters you can play with to control the look and
     // feel of your fire: COOLING (used in step 1 above), and SPARKING (used

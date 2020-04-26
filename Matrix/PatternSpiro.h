@@ -52,7 +52,7 @@ private:
 public:
     //--------------------------------------------------------------
     // Constructor
-    PatternSpiro(uint8_t w, uint8_t h) : Drawable("PatternSpiro", w, h)
+    PatternSpiro(uint8_t w, uint8_t h) : Drawable(MATRIX_PATT_SPIRO, w, h)
     {
         //--------------------------------------------------------------
         // Calculate Matrix Data

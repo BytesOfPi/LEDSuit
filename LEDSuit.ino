@@ -28,6 +28,10 @@ FASTLED_USING_NAMESPACE
 // Modified Adafruit GFX Libraries for Fast LED
 #include <FastLED_GFX.h>
 
+//################################################################################
+// Shared variable libraries
+#include "Shared/Share.h"
+
 /*
  * setup() - Primary method used to initialize device and 
  * peripherals

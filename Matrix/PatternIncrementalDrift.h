@@ -34,7 +34,7 @@ private:
 public:
     //--------------------------------------------------------------
     // Constructor
-    PatternIncrementalDrift(uint8_t w, uint8_t h) : Drawable("PatternIncrementalDrift", w, h) {}
+    PatternIncrementalDrift(uint8_t w, uint8_t h) : Drawable(MATRIX_PATT_DRIFT, w, h) {}
 
     /* drawFrame()
      * Primary method that draws the next frame

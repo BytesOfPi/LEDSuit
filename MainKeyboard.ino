@@ -70,11 +70,11 @@ void keyboardCycleLoop() {
   {
   if ( key == '1' ) 
     {
-      prevPattern();
+      prevSuitPattern();
     }
   if ( key == '2' ) 
     {
-      nextPattern();
+      nextSuitPattern();
     }
   if ( key == '*' ) 
     {
