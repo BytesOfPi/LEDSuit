@@ -1,6 +1,9 @@
 /*
- * ???: https://github.com/???
+ * MatrixScroll.h: https://github.com/BytesOfPi/LEDSuit
  * Copyright (c) 2020 Nathan DeGroff
+ *
+ * Overview:
+ * This class defines and tracks scrolling text.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -82,7 +85,10 @@ public:
             canvas.setTextColor(color);
         }
 
-        Serial.println(text);
+        EVERY_N_SECONDS(3)
+        {
+            Serial.println(text);
+        }
         //--------------------------------------------------------------
         // Set cursor and print text
         canvas.setCursor(nextX, yCoord);

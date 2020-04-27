@@ -1,6 +1,9 @@
 /*
- * ???: https://github.com/???
+ * PatternBTS.h: https://github.com/BytesOfPi/LEDSuit
  * Copyright (c) 2020 Nathan DeGroff
+ *
+ * Overview:
+ * This Drawable class defines and draws the matrix component BTS pattern.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in

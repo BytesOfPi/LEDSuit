@@ -1,4 +1,11 @@
 /*
+ * Drawable.h: https://github.com/BytesOfPi/LEDSuit
+ * Copyright (c) 2020 Nathan DeGroff
+ *
+ * Overview:
+ * This file defines the basic methods of the Matrix boilerplate methods so all
+ * patterns behave similarly in code.
+ * 
  * Aurora: https://github.com/pixelmatix/aurora
  * Copyright (c) 2014 Jason Coon
  *

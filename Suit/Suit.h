@@ -52,13 +52,14 @@
 //################################################################################
 // Shared variable libraries
 #include "../Shared/Share.h"
-#include "../Shared/Component.h"
+#include "../Shared/ComponentLED.h"
 
-#include "SuitUtility.h"
 #include "SuitCommon.h"
 
-#define NUM_SKIP_CYCLES 2
-
+/**
+ * Suit Class
+ * This class controls drawing to the LED suit (arms and legs) on the outfit.
+ */
 class Suit : public ComponentLED
 {
 private:
@@ -70,10 +71,6 @@ private:
 
     // Used for palette style patterns
     uint8_t startIndex = 0;
-
-    byte CYCLE_PATTERN_NUMBER = 1; // Make sure not to set to skipped cycle index
-    int CYCLE_MILLISECONDS = 7000; // 7 seconds
-    String skipCycles[NUM_SKIP_CYCLES] = {"cycle", "lightning"};
 
 public:
     //--------------------------------------------------------------
@@ -99,10 +96,10 @@ public:
     }
 
     /**
-       * switchPattern()
-       * This method is called every time there is a pattern switch.  This will allow
-       * us to reset any stored values that patterns use 
-       */
+     * switchPattern()
+     * This method is called every time there is a pattern switch.  This will allow
+     * us to reset any stored values that patterns use 
+     */
     virtual void switchPattern()
     {
         printCurrentPattern();
@@ -112,29 +109,29 @@ public:
      * drawPattern()
      * Given a specific pattern string, draw the related pattern.
      */
-    virtual unsigned int drawPattern(String patt)
+    virtual unsigned int drawPattern(String val)
     {
         //--------------------------------------------------------------
         // Palettes
-        if (patt.equals("paletteCCHS"))
+        if (val.equals("paletteCCHS"))
             return paletteMove(myCCHS1Palette_p);
-        if (patt.equals("paletteCCHS2"))
+        if (val.equals("paletteCCHS2"))
             return paletteMove(myCCHS2Palette_p);
-        if (patt.equals("paletteRWB"))
+        if (val.equals("paletteRWB"))
             return paletteMove(CloudColors_p);
-        if (patt.equals("paletteCloud"))
+        if (val.equals("paletteCloud"))
             return paletteMove(myRedWhiteBluePalette_p);
-        if (patt.equals("paletteLava"))
+        if (val.equals("paletteLava"))
             return paletteMove(LavaColors_p);
-        if (patt.equals("paletteHeat"))
+        if (val.equals("paletteHeat"))
             return paletteMove(HeatColors_p);
-        if (patt.equals("paletteOcean"))
+        if (val.equals("paletteOcean"))
             return paletteMove(OceanColors_p);
-        if (patt.equals("paletteForest"))
+        if (val.equals("paletteForest"))
             return paletteMove(ForestColors_p);
-        if (patt.equals("paletteChristmas"))
+        if (val.equals("paletteChristmas"))
             return paletteMove(myChristmasPalette_p);
-        if (patt.equals("palletteCCHSGlitter"))
+        if (val.equals("palletteCCHSGlitter"))
         {
             paletteMove(myCCHS2Palette_p);
             addGlitter(suitLeds, NUM_LEDS, 80);
@@ -142,49 +139,49 @@ public:
         }
         //--------------------------------------------------------------
         // Miscellaneous
-        if (patt.equals("twoSplit"))
+        if (val.equals("twoSplit"))
             return twoSplit();
-        if (patt.equals("juggle"))
+        if (val.equals("juggle"))
             return juggle();
-        if (patt.equals("confetti"))
+        if (val.equals("confetti"))
             return confetti();
 
         //--------------------------------------------------------------
         // BPM
-        if (patt.equals("bpmParty"))
+        if (val.equals("bpmParty"))
             return bpmPulse(PartyColors_p);
-        if (patt.equals("bpmRWB"))
+        if (val.equals("bpmRWB"))
             return bpmPulse(myRedWhiteBluePalette_p);
-        if (patt.equals("bpmChristmas"))
+        if (val.equals("bpmChristmas"))
             return bpmPulse(myChristmasPalette_p);
 
         //--------------------------------------------------------------
         // Solid
-        if (patt.equals("solidBlue"))
+        if (val.equals("solidBlue"))
             return solidBlue();
-        if (patt.equals("solidRed"))
+        if (val.equals("solidRed"))
             return solidRed();
-        if (patt.equals("solidGreen"))
+        if (val.equals("solidGreen"))
             return solidGreen();
 
         //--------------------------------------------------------------
         // Theater
-        if (patt.equals("theaterCCHS"))
+        if (val.equals("theaterCCHS"))
             return theaterCCHS();
-        if (patt.equals("theaterChristmas"))
+        if (val.equals("theaterChristmas"))
             return theaterChristmas();
 
         //--------------------------------------------------------------
         // Mixins
-        if (patt.equals("mixinsCCHS"))
+        if (val.equals("mixinsCCHS"))
             return mixinsCCHS();
-        if (patt.equals("mixinsLava"))
+        if (val.equals("mixinsLava"))
             return mixinsLava();
-        if (patt.equals("mixSpecLava"))
+        if (val.equals("mixSpecLava"))
             return mixSpecLava();
-        if (patt.equals("mixSpecOcean"))
+        if (val.equals("mixSpecOcean"))
             return mixSpecOcean();
-        if (patt.equals("mixSpecForest"))
+        if (val.equals("mixSpecForest"))
             return mixSpecForest();
 
         return 0;
@@ -211,8 +208,8 @@ public:
         // Switch cycle() pattern every 10 seconds
         EVERY_N_SECONDS(10)
         {
-            printCurrentPattern();
             patt->cycleNext();
+            printCurrentPattern();
         }
     }
 

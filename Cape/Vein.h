@@ -1,6 +1,12 @@
 /*
- * Vein.h: https://github.com/???
+ * Vein.h: https://github.com/BytesOfPi/LEDSuit
  * Copyright (c) 2020 Nathan DeGroff
+ *
+ * Overview:
+ * This file defines and controls a Vein component.  While each wing is one single
+ * line of LEDs, each vein defines a start (from backpack) and an end (tip of wing).
+ * This definition of LEDs helps make drawing patterns easier while calculating where
+ * a particular LED is on the vein using array math.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -126,6 +132,10 @@ public:
         }
     }
 
+    /**
+     * patternFire()
+     * This method will draw fire extending out from the backpack down the vein
+     */
     void patternFire(boolean revThis = false)
     {
         // Step 1.  Cool down every cell a little

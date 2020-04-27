@@ -1,5 +1,14 @@
 /*
- * Aurora: https://github.com/pixelmatix/aurora
+ * PatternSpiro.h: https://github.com/BytesOfPi/LEDSuit
+ * Copyright (c) 2020 Nathan DeGroff
+ * 
+ * Overview:
+ * This Drawable class defines and draws the matrix component spiro pattern.
+ * It draws dots with trails spinning out from the center and back in.  each time
+ * the dot(s) come to the center, they either increase or decrease in number.  The
+ * dot's color changes in the course of its flight based on the chosen palette.
+ * 
+ * Portions of this code are adapted from Aurora: https://github.com/pixelmatix/aurora
  * Copyright (c) 2014 Jason Coon
  * 
  * Portions of this code are adapted for LED Costume

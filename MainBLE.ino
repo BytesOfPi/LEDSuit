@@ -8,22 +8,22 @@
 
 #define CHARACTERISTIC_GET_FULL_PATT_UUID "9082f7cb-c208-43d6-9848-e0802df34321"
 
-#define CHARACTERISTIC_SET_SUIT_PATT_UUID "9082f7cb-c208-43d6-9848-e0802df31234"
-#define CHARACTERISTIC_GET_SUIT_PATT_UUID "9082f7cb-c208-43d6-9848-e0802df301b6"
-#define CHARACTERISTIC_GET_SUIT_PAL_UUID "9082f7cb-c208-43d6-9848-e0802df301b7"
-#define CHARACTERISTIC_GET_SUIT_COL_UUID "9082f7cb-c208-43d6-9848-e0802df301b8"
+#define CHARACTERISTIC_SET_SUIT_PATT_UUID "ecd0fe34-fa4c-4cd0-9a4e-991d57ef5008"
+#define CHARACTERISTIC_GET_SUIT_PATT_UUID "2539da47-36d5-4e26-8789-621e683aa294"
+#define CHARACTERISTIC_GET_SUIT_PAL_UUID "66efc725-2d5b-4e88-a381-cd6cb4d78cfb"
+#define CHARACTERISTIC_GET_SUIT_COL_UUID "357d7465-d7a1-46f5-983f-deb23e28afaa"
 
-#define CHARACTERISTIC_GET_MATRIX_PATT_UUID "9082f7cb-c208-43d6-9848-e0802df301b9"
-#define CHARACTERISTIC_GET_MATRIX_PAL_UUID "9082f7cb-c208-43d6-9848-e0802df301ba"
-#define CHARACTERISTIC_GET_MATRIX_COL_UUID "9082f7cb-c208-43d6-9848-e0802df301bb"
+#define CHARACTERISTIC_GET_MATRIX_PATT_UUID "1c29d445-46e7-40c1-ad45-e87d10f4ba79"
+#define CHARACTERISTIC_GET_MATRIX_PAL_UUID "98ba0bbe-d05e-4d9a-82f2-af7936c01506"
+#define CHARACTERISTIC_GET_MATRIX_COL_UUID "b6183ec3-e9da-4751-bf02-bba21462f70b"
 
-#define CHARACTERISTIC_GET_CAPE_PATT_UUID "9082f7cb-c208-43d6-9848-e0802df301bc"
-#define CHARACTERISTIC_GET_CAPE_PAL_UUID "9082f7cb-c208-43d6-9848-e0802df301bd"
-#define CHARACTERISTIC_GET_CAPE_PAL_SEC_UUID "9082f7cb-c208-43d6-9848-e0802df301be"
-#define CHARACTERISTIC_GET_CAPE_COL_UUID "9082f7cb-c208-43d6-9848-e0802df301bf"
+#define CHARACTERISTIC_GET_CAPE_PATT_UUID "e6f0ebf4-6b06-4d0a-a3a0-d1c91e7b5919"
+#define CHARACTERISTIC_GET_CAPE_PAL_UUID "e8c3f9ae-8818-11ea-bc55-0242ac130003"
+#define CHARACTERISTIC_GET_CAPE_PAL_SEC_UUID "f2fb535e-8818-11ea-bc55-0242ac130003 "
+#define CHARACTERISTIC_GET_CAPE_COL_UUID "6aaec57c-6cfb-4465-8586-170087695a97"
 
-#define CHARACTERISTIC_GET_MATRIX_SCROLL_UUID "9082f7cb-c208-43d6-9848-e0802df301c0"
-#define CHARACTERISTIC_GET_MATRIX_TIMER_UUID "9082f7cb-c208-43d6-9848-e0802df301c1"
+#define CHARACTERISTIC_GET_MATRIX_SCROLL_UUID "799b6016-8120-4b10-b6c3-0c58178ebd00"
+#define CHARACTERISTIC_GET_MATRIX_TIMER_UUID "a8ea0d63-4c4d-4535-a420-fb97053d32b8"
 
 #define BLE_SERVER_NAME "PandaLED"
 
@@ -35,139 +35,173 @@ uint32_t value = 0;
 #include "BLE/MyServerCallbacks.h"
 #include "BLE/CustomBLECharacteristicCallbacks.h"
 
+void createBLECharacteristic(BLEService *pService, const char *uuid, uint8_t bleID, const char *msg)
+{
+    BLECharacteristic *pCharGetMsg = pService->createCharacteristic(
+        uuid, BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE);
+    pCharGetMsg->setCallbacks(new CustomBLECharacteristicCallbacks(bleID));
+    pCharGetMsg->setValue(msg);
+}
+
 void bleSetup()
 {
-  Serial.begin(115200);
+    Serial.begin(115200);
 
-  Serial.println("Initializing Bluetooth...");
-  // Initialize device and create a server
-  BLEDevice::init(BLE_SERVER_NAME);
-  pServer = BLEDevice::createServer();
-  pServer->setCallbacks(new MyServerCallbacks());
+    Serial.println("Initializing Bluetooth...");
+    // Initialize device and create a server
+    BLEDevice::init(BLE_SERVER_NAME);
+    pServer = BLEDevice::createServer();
+    pServer->setCallbacks(new MyServerCallbacks());
 
-  //--------------------------------------------------------------
-  // Step 1: Create the service and set it up with the writable characteristic
-  BLEService *pService = pServer->createService(SERVICE_UUID);
+    //--------------------------------------------------------------
+    // Step 1: Create the service and set it up with the writable characteristic
+    BLEService *pService = pServer->createService(SERVICE_UUID);
 
-  //--------------------------------------------------------------
-  // Step 2: Setup the Notify Pattern Message Characteristic
-  // pCharSendStrandMsg defined in BLEUtility.h
-  pCharSendStrandMsg = pService->createCharacteristic(
-      CHARACTERISTIC_SET_SUIT_PATT_UUID,
-      BLECharacteristic::PROPERTY_READ |
-          BLECharacteristic::PROPERTY_WRITE |
-          BLECharacteristic::PROPERTY_NOTIFY |
-          BLECharacteristic::PROPERTY_INDICATE);
-  // Create a BLE Descriptor
-  pCharSendStrandMsg->addDescriptor(new BLE2902());
+    //--------------------------------------------------------------
+    // Step 2: Setup the Notify Pattern Message Characteristic
+    // pCharSendStrandMsg defined in BLEUtility.h
+    pCharSendStrandMsg = pService->createCharacteristic(
+        CHARACTERISTIC_SET_SUIT_PATT_UUID,
+        BLECharacteristic::PROPERTY_READ |
+            BLECharacteristic::PROPERTY_WRITE |
+            BLECharacteristic::PROPERTY_NOTIFY |
+            BLECharacteristic::PROPERTY_INDICATE);
+    // Create a BLE Descriptor
+    pCharSendStrandMsg->addDescriptor(new BLE2902());
 
-  //--------------------------------------------------------------
-  // Step 3: Setup the FULL Outfit Pattern Message Characteristics
-  BLECharacteristic *pCharGetMsg = pService->createCharacteristic(
-      CHARACTERISTIC_GET_FULL_PATT_UUID,
-      BLECharacteristic::PROPERTY_READ |
-          BLECharacteristic::PROPERTY_WRITE);
-  pCharGetMsg->setCallbacks(new CustomBLECharacteristicCallbacks(BLE_FULL_CALLBACK));
-  pCharGetMsg->setValue("Control full outfit");
-/*
-  //--------------------------------------------------------------
-  // Step 4: Setup the Get PATTERN Message Characteristics
-  pCharGetMsg = pService->createCharacteristic(
-      CHARACTERISTIC_GET_SUIT_PATT_UUID,
-      BLECharacteristic::PROPERTY_READ |
-          BLECharacteristic::PROPERTY_WRITE);
-  pCharGetMsg->setCallbacks(new CustomBLECharacteristicCallbacks(BLE_SUIT_PATT_CALLBACK));
-  pCharGetMsg->setValue("Control suit pattern by writing here");
-  pCharGetMsg = pService->createCharacteristic(
-      CHARACTERISTIC_GET_MATRIX_PATT_UUID,
-      BLECharacteristic::PROPERTY_READ |
-          BLECharacteristic::PROPERTY_WRITE);
-  pCharGetMsg->setCallbacks(new CustomBLECharacteristicCallbacks(BLE_MATRIX_PATT_CALLBACK));
-  pCharGetMsg->setValue("Control matrix pattern by writing here");
-  pCharGetMsg = pService->createCharacteristic(
-      CHARACTERISTIC_GET_CAPE_PATT_UUID,
-      BLECharacteristic::PROPERTY_READ |
-          BLECharacteristic::PROPERTY_WRITE);
-  pCharGetMsg->setCallbacks(new CustomBLECharacteristicCallbacks(BLE_CAPE_PATT_CALLBACK));
-  pCharGetMsg->setValue("Control cape pattern by writing here");
+    //--------------------------------------------------------------
+    // Step 3: Setup the FULL Outfit Pattern Message Characteristics
+    createBLECharacteristic(pService,
+                            CHARACTERISTIC_GET_FULL_PATT_UUID,
+                            BLE_FULL_CALLBACK,
+                            "Full outfit");
 
-  //--------------------------------------------------------------
-  // Step 5: Setup the Get PALETTE Message Characteristics
-  pCharGetMsg = pService->createCharacteristic(
-      CHARACTERISTIC_GET_SUIT_PAL_UUID,
-      BLECharacteristic::PROPERTY_READ |
-          BLECharacteristic::PROPERTY_WRITE);
-  pCharGetMsg->setCallbacks(new CustomBLECharacteristicCallbacks(BLE_SUIT_PAL_CALLBACK));
-  pCharGetMsg->setValue("Control suit palette by writing here");
-  pCharGetMsg = pService->createCharacteristic(
-      CHARACTERISTIC_GET_MATRIX_PAL_UUID,
-      BLECharacteristic::PROPERTY_READ |
-          BLECharacteristic::PROPERTY_WRITE);
-  pCharGetMsg->setCallbacks(new CustomBLECharacteristicCallbacks(BLE_MATRIX_PAL_CALLBACK));
-  pCharGetMsg->setValue("Control matrix palette by writing here");
-  pCharGetMsg = pService->createCharacteristic(
-      CHARACTERISTIC_GET_CAPE_PAL_UUID,
-      BLECharacteristic::PROPERTY_READ |
-          BLECharacteristic::PROPERTY_WRITE);
-  pCharGetMsg->setCallbacks(new CustomBLECharacteristicCallbacks(BLE_CAPE_PAL_CALLBACK));
-  pCharGetMsg->setValue("Control cape palette by writing here");
-  pCharGetMsg = pService->createCharacteristic(
-      CHARACTERISTIC_GET_CAPE_PAL_SEC_UUID,
-      BLECharacteristic::PROPERTY_READ |
-          BLECharacteristic::PROPERTY_WRITE);
-  pCharGetMsg->setCallbacks(new CustomBLECharacteristicCallbacks(BLE_CAPE_PAL_SEC_CALLBACK));
-  pCharGetMsg->setValue("Control cape 2 palette by writing here");
+    //--------------------------------------------------------------
+    // Step 4: Setup the Get PATTERN Message Characteristics
+    createBLECharacteristic(pService,
+                            CHARACTERISTIC_GET_SUIT_PATT_UUID,
+                            BLE_SUIT_PATT_CALLBACK,
+                            "Suit Pattern");
+    createBLECharacteristic(pService,
+                            CHARACTERISTIC_GET_MATRIX_PATT_UUID,
+                            BLE_MATRIX_PATT_CALLBACK,
+                            "Matrix Pattern");
+    createBLECharacteristic(pService,
+                            CHARACTERISTIC_GET_CAPE_PATT_UUID,
+                            BLE_CAPE_PATT_CALLBACK,
+                            "Cape Pattern");
+    /*
+    //--------------------------------------------------------------
+    // Step 5: Setup the Get PALETTE Message Characteristics
+    createBLECharacteristic(pService,
+                            CHARACTERISTIC_GET_SUIT_PAL_UUID,
+                            BLE_SUIT_PAL_CALLBACK,
+                            "SuitPal");
+    createBLECharacteristic(pService,
+                            CHARACTERISTIC_GET_MATRIX_PAL_UUID,
+                            BLE_MATRIX_PAL_CALLBACK,
+                            "MatrixPal");
+    createBLECharacteristic(pService,
+                            CHARACTERISTIC_GET_CAPE_PAL_UUID,
+                            BLE_CAPE_PAL_CALLBACK,
+                            "CapePal1");
+    createBLECharacteristic(pService,
+                            CHARACTERISTIC_GET_CAPE_PAL_SEC_UUID,
+                            BLE_CAPE_PAL_SEC_CALLBACK,
+                            "CapePal2");
 
-  //--------------------------------------------------------------
-  // Step 6: Setup the Get COLOR Message Characteristics
-  pCharGetMsg = pService->createCharacteristic(
-      CHARACTERISTIC_GET_SUIT_COL_UUID,
-      BLECharacteristic::PROPERTY_READ |
-          BLECharacteristic::PROPERTY_WRITE);
-  pCharGetMsg->setCallbacks(new CustomBLECharacteristicCallbacks(BLE_SUIT_COL_CALLBACK));
-  pCharGetMsg->setValue("Control suit color by writing here");
-  pCharGetMsg = pService->createCharacteristic(
-      CHARACTERISTIC_GET_MATRIX_COL_UUID,
-      BLECharacteristic::PROPERTY_READ |
-          BLECharacteristic::PROPERTY_WRITE);
-  pCharGetMsg->setCallbacks(new CustomBLECharacteristicCallbacks(BLE_MATRIX_COL_CALLBACK));
-  pCharGetMsg->setValue("Control matrix color by writing here");
-  pCharGetMsg = pService->createCharacteristic(
-      CHARACTERISTIC_GET_CAPE_COL_UUID,
-      BLECharacteristic::PROPERTY_READ |
-          BLECharacteristic::PROPERTY_WRITE);
-  pCharGetMsg->setCallbacks(new CustomBLECharacteristicCallbacks(BLE_CAPE_COL_CALLBACK));
-  pCharGetMsg->setValue("Control cape color by writing here");
+    // pCharGetMsg = pService->createCharacteristic(
+    //     CHARACTERISTIC_GET_SUIT_PAL_UUID,
+    //     BLECharacteristic::PROPERTY_READ |
+    //         BLECharacteristic::PROPERTY_WRITE);
+    // pCharGetMsg->setCallbacks(new CustomBLECharacteristicCallbacks(BLE_SUIT_PAL_CALLBACK));
+    // pCharGetMsg->setValue("Control suit palette by writing here");
+    // pCharGetMsg = pService->createCharacteristic(
+    //     CHARACTERISTIC_GET_MATRIX_PAL_UUID,
+    //     BLECharacteristic::PROPERTY_READ |
+    //         BLECharacteristic::PROPERTY_WRITE);
+    // pCharGetMsg->setCallbacks(new CustomBLECharacteristicCallbacks(BLE_MATRIX_PAL_CALLBACK));
+    // pCharGetMsg->setValue("Control matrix palette by writing here");
+    // pCharGetMsg = pService->createCharacteristic(
+    //     CHARACTERISTIC_GET_CAPE_PAL_UUID,
+    //     BLECharacteristic::PROPERTY_READ |
+    //         BLECharacteristic::PROPERTY_WRITE);
+    // pCharGetMsg->setCallbacks(new CustomBLECharacteristicCallbacks(BLE_CAPE_PAL_CALLBACK));
+    // pCharGetMsg->setValue("Control cape palette by writing here");
+    // pCharGetMsg = pService->createCharacteristic(
+    //     CHARACTERISTIC_GET_CAPE_PAL_SEC_UUID,
+    //     BLECharacteristic::PROPERTY_READ |
+    //         BLECharacteristic::PROPERTY_WRITE);
+    // pCharGetMsg->setCallbacks(new CustomBLECharacteristicCallbacks(BLE_CAPE_PAL_SEC_CALLBACK));
+    // pCharGetMsg->setValue("Control cape 2 palette by writing here");
 
-  //--------------------------------------------------------------
-  // Step 7: Setup the Get LED Matrix SCROLL Message Characteristic
-  pCharGetMsg = pService->createCharacteristic(
-      CHARACTERISTIC_GET_MATRIX_SCROLL_UUID,
-      BLECharacteristic::PROPERTY_READ |
-          BLECharacteristic::PROPERTY_WRITE);
-  pCharGetMsg->setCallbacks(new CustomBLECharacteristicCallbacks(BLE_MATRIX_SCROLL_CALLBACK));
-  pCharGetMsg->setValue("Matrix Scroll");
+    //--------------------------------------------------------------
+    // Step 6: Setup the Get COLOR Message Characteristics
+    createBLECharacteristic(pService,
+                            CHARACTERISTIC_GET_SUIT_COL_UUID,
+                            BLE_SUIT_COL_CALLBACK,
+                            "Suit Color");
+    createBLECharacteristic(pService,
+                            CHARACTERISTIC_GET_MATRIX_COL_UUID,
+                            BLE_MATRIX_COL_CALLBACK,
+                            "Matrix Color");
+    createBLECharacteristic(pService,
+                            CHARACTERISTIC_GET_CAPE_COL_UUID,
+                            BLE_CAPE_COL_CALLBACK,
+                            "Cape Color");
+    // pCharGetMsg = pService->createCharacteristic(
+    //     CHARACTERISTIC_GET_SUIT_COL_UUID,
+    //     BLECharacteristic::PROPERTY_READ |
+    //         BLECharacteristic::PROPERTY_WRITE);
+    // pCharGetMsg->setCallbacks(new CustomBLECharacteristicCallbacks(BLE_SUIT_COL_CALLBACK));
+    // pCharGetMsg->setValue("Control suit color by writing here");
+    // pCharGetMsg = pService->createCharacteristic(
+    //     CHARACTERISTIC_GET_MATRIX_COL_UUID,
+    //     BLECharacteristic::PROPERTY_READ |
+    //         BLECharacteristic::PROPERTY_WRITE);
+    // pCharGetMsg->setCallbacks(new CustomBLECharacteristicCallbacks(BLE_MATRIX_COL_CALLBACK));
+    // pCharGetMsg->setValue("Control matrix color by writing here");
+    // pCharGetMsg = pService->createCharacteristic(
+    //     CHARACTERISTIC_GET_CAPE_COL_UUID,
+    //     BLECharacteristic::PROPERTY_READ |
+    //         BLECharacteristic::PROPERTY_WRITE);
+    // pCharGetMsg->setCallbacks(new CustomBLECharacteristicCallbacks(BLE_CAPE_COL_CALLBACK));
+    // pCharGetMsg->setValue("Control cape color by writing here");
 
-  //--------------------------------------------------------------
-  // Step 8: Setup the Get LED Matrix TIMER Message Characteristic
-  pCharGetMsg = pService->createCharacteristic(
-      CHARACTERISTIC_GET_MATRIX_TIMER_UUID,
-      BLECharacteristic::PROPERTY_READ |
-          BLECharacteristic::PROPERTY_WRITE);
-  pCharGetMsg->setCallbacks(new CustomBLECharacteristicCallbacks(BLE_MATRIX_TIMER_CALLBACK));
-  pCharGetMsg->setValue("Matrix Timer");
-*/
-  //--------------------------------------------------------------
-  // Step 9: Start Service
-  pService->start();
+    //--------------------------------------------------------------
+    // Step 7: Setup the Get LED Matrix SCROLL Message Characteristic
+    createBLECharacteristic(pService,
+                            CHARACTERISTIC_GET_MATRIX_SCROLL_UUID,
+                            BLE_MATRIX_SCROLL_CALLBACK,
+                            "Matrix Scroll");
+    // pCharGetMsg = pService->createCharacteristic(
+    //     CHARACTERISTIC_GET_MATRIX_SCROLL_UUID,
+    //     BLECharacteristic::PROPERTY_READ |
+    //         BLECharacteristic::PROPERTY_WRITE);
+    // pCharGetMsg->setCallbacks(new CustomBLECharacteristicCallbacks(BLE_MATRIX_SCROLL_CALLBACK));
+    // pCharGetMsg->setValue("Matrix Scroll");
 
-  //--------------------------------------------------------------
-  // Step 10: Start Advertising
-  BLEAdvertising *pAdvertising = pServer->getAdvertising();
-  pAdvertising->setScanResponse(false);
-  pAdvertising->setMinPreferred(0x0);
-  pAdvertising->start();
-  Serial.println("Bluetooth init complete.");
+    /*
+    //--------------------------------------------------------------
+    // Step 8: Setup the Get LED Matrix TIMER Message Characteristic
+    pCharGetMsg = pService->createCharacteristic(
+        CHARACTERISTIC_GET_MATRIX_TIMER_UUID,
+        BLECharacteristic::PROPERTY_READ |
+            BLECharacteristic::PROPERTY_WRITE);
+    pCharGetMsg->setCallbacks(new CustomBLECharacteristicCallbacks(BLE_MATRIX_TIMER_CALLBACK));
+    pCharGetMsg->setValue("Matrix Timer");
+    */
+    //--------------------------------------------------------------
+    // Step 9: Start Service
+    pService->start();
+
+    //--------------------------------------------------------------
+    // Step 10: Start Advertising
+    BLEAdvertising *pAdvertising = pServer->getAdvertising();
+    pAdvertising->setScanResponse(false);
+    pAdvertising->setMinPreferred(0x0);
+    pAdvertising->start();
+    Serial.println("Bluetooth init complete.");
 }
 
 /*
@@ -176,18 +210,18 @@ void bleSetup()
  */
 void bleLoop()
 {
-  // disconnecting
-  if (!deviceConnected && oldDeviceConnected)
-  {
-    delay(500);                  // give the bluetooth stack the chance to get things ready
-    pServer->startAdvertising(); // restart advertising
-    Serial.println("start advertising");
-    oldDeviceConnected = deviceConnected;
-  }
-  // connecting
-  if (deviceConnected && !oldDeviceConnected)
-  {
-    // do stuff here on connecting
-    oldDeviceConnected = deviceConnected;
-  }
+    // disconnecting
+    if (!deviceConnected && oldDeviceConnected)
+    {
+        delay(500);                  // give the bluetooth stack the chance to get things ready
+        pServer->startAdvertising(); // restart advertising
+        Serial.println("start advertising");
+        oldDeviceConnected = deviceConnected;
+    }
+    // connecting
+    if (deviceConnected && !oldDeviceConnected)
+    {
+        // do stuff here on connecting
+        oldDeviceConnected = deviceConnected;
+    }
 }

@@ -1,5 +1,4 @@
 /*
- * 
  * MatrixUtility.h: https://github.com/???
  * Copyright (c) 2020 Nathan DeGroff
  * 
@@ -35,11 +34,6 @@
 #include "../Shared/Share.h"
 #include "MatrixScroll.h"
 #include "MatrixTimer.h"
-
-// #ifndef CANVAS_WIDTH
-// #define CANVAS_WIDTH 16
-// #define CANVAS_HEIGHT 16
-// #endif
 
 #ifndef MatrixUtility_H
 #define MatrixUtility_H

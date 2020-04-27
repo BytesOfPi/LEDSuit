@@ -1,6 +1,9 @@
 /*
- * ???: https://github.com/???
+ * Cape.h: https://github.com/BytesOfPi/LEDSuit
  * Copyright (c) 2020 Nathan DeGroff
+ *
+ * Overview:
+ * This file defines and controls the Cape component.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -53,7 +56,7 @@
 //################################################################################
 // Shared variable libraries
 #include "../Shared/Share.h"
-#include "../Shared/Component.h"
+#include "../Shared/ComponentLED.h"
 
 class Cape : public ComponentLED
 {
@@ -103,9 +106,8 @@ public:
      * This method is called every time there is a pattern switch.  This will allow
      * us to reset any stored values that patterns use 
      */
-    void switchPattern()
+    virtual void switchPattern()
     {
-        printCurrentPattern();
         lWing.switchPattern();
         rWing.switchPattern();
     }
@@ -114,16 +116,16 @@ public:
      * drawPatt()
      * Given a specific pattern string, draw the related pattern.
      */
-    virtual unsigned int drawPattern(String patt)
+    virtual unsigned int drawPattern(String val)
     {
         //------------------------------------------------------------
         // Draw the pattern
-        if (patt.equals(CAPE_PATT_LIGHTSABER)) return patternLightsaber();
-        if (patt.equals(CAPE_PATT_SPARKLE)) return patternSparkle();
-        if (patt.equals(CAPE_PATT_EXTEND)) return patternExtend();
-        if (patt.equals(CAPE_PATT_JUGGLE)) return patternJuggle();
-        if (patt.equals(CAPE_PATT_BPM)) return patternBPM();
-        if (patt.equals(CAPE_PATT_FIRE)) return patternFire();
+        if (val.equals(CAPE_PATT_LIGHTSABER)) return patternLightsaber();
+        if (val.equals(CAPE_PATT_SPARKLE)) return patternSparkle();
+        if (val.equals(CAPE_PATT_EXTEND)) return patternExtend();
+        if (val.equals(CAPE_PATT_JUGGLE)) return patternJuggle();
+        if (val.equals(CAPE_PATT_BPM)) return patternBPM();
+        if (val.equals(CAPE_PATT_FIRE)) return patternFire();
 
         return 0;
     }
@@ -133,7 +135,7 @@ public:
      * This method defines the periodic adjustments to class variables that
      * keep the patterns moving 
      */
-    void periodicAdjust()
+    virtual void periodicAdjust()
     {
         //--------------------------------------------------------------
         // Used only for palette patterns to move the pattern along strand
@@ -158,8 +160,8 @@ public:
         // Switch cycle() pattern every 10 seconds
         EVERY_N_SECONDS(10)
         {
-            printCurrentPattern();
             patt->cycleNext();
+            printCurrentPattern();
         }
     }
 

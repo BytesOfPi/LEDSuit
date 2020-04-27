@@ -1,5 +1,12 @@
 /*
- * Aurora: https://github.com/pixelmatix/aurora
+ * PatternSwirl.h: https://github.com/BytesOfPi/LEDSuit
+ * Copyright (c) 2020 Nathan DeGroff
+ * 
+ * Overview:
+ * This Drawable class defines and draws the matrix component swirl pattern.
+ * 
+ * 
+ * Portions of this code are adapted from Aurora: https://github.com/pixelmatix/aurora
  * Copyright (c) 2014 Jason Coon
  *
  * Portions of this code are adapted from SmartMatrixSwirl by Mark Kriegsman: https://gist.github.com/kriegsman/5adca44e14ad025e6d3b

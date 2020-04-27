@@ -1,6 +1,10 @@
 /*
- * ???: https://github.com/???
+ * MatrixTimer.h: https://github.com/BytesOfPi/LEDSuit
  * Copyright (c) 2020 Nathan DeGroff
+ *
+ * Overview:
+ * This class defines a timer.  Not necessarily needed on an LED Outfit but was
+ * created for my wife's high school class as a visual timer for test taking.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in

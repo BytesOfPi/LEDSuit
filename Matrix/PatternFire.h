@@ -1,5 +1,11 @@
 /*
- * Aurora: https://github.com/pixelmatix/aurora
+ * PatternFire.h: https://github.com/BytesOfPi/LEDSuit
+ * Copyright (c) 2020 Nathan DeGroff
+ * 
+ * Overview:
+ * This Drawable class defines and draws the matrix component fire pattern.
+ * 
+ * Portions of this code are adapted from Aurora: https://github.com/pixelmatix/aurora
  * Copyright (c) 2014 Jason Coon
  *
  * Portions of this code are adapted from FastLED Fire2012 example by Mark Kriegsman: https://github.com/FastLED/FastLED/tree/master/examples/Fire2012WithPalette

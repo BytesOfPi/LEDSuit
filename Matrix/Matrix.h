@@ -1,6 +1,9 @@
 /*
- * ???: https://github.com/???
+ * Matrix.h: https://github.com/BytesOfPi/LEDSuit
  * Copyright (c) 2020 Nathan DeGroff
+ *
+ * Overview:
+ * This file defines and controls the Matrix component.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -32,7 +35,7 @@
 //################################################################################
 // Shared variable libraries
 #include "../Shared/Share.h"
-#include "../Shared/Component.h"
+#include "../Shared/ComponentLED.h"
 
 //################################################################################
 // Custom Matrix Libraries
@@ -48,11 +51,11 @@
 #include "PatternBTS.h"
 #include "PatternCustomBit.h"
 
-#define MATRIX_NUM_PALETTES 7
-CRGBPalette16 matrixPalettes[] = {(CRGBPalette16)CloudColors_p, (CRGBPalette16)LavaColors_p, (CRGBPalette16)OceanColors_p,
-                                  (CRGBPalette16)ForestColors_p, (CRGBPalette16)RainbowColors_p, (CRGBPalette16)RainbowStripeColors_p,
-                                  (CRGBPalette16)HeatColors_p};
-
+#define MATRIX_NUM_DRAWABLES 10
+/**
+ * Matrix Class
+ * This class controls drawing to the LED matrix on the outfit.
+ */
 class Matrix : public ComponentLED
 {
 private:
@@ -62,16 +65,16 @@ private:
     GFXcanvas *myCanvas = new GFXcanvas(16, 16);
     //--------------------------------------------------------------
     // Create new pattern classes
-    Drawable *matrixDraw[MATRIX_NUM_PATTERNS] = {new PatternFire(CANVAS_WIDTH, CANVAS_HEIGHT),
-                                                 new PatternWave(CANVAS_WIDTH, CANVAS_HEIGHT),
-                                                 new PatternSpiro(CANVAS_WIDTH, CANVAS_HEIGHT),
-                                                 new PatternPlasma(CANVAS_WIDTH, CANVAS_HEIGHT),
-                                                 new PatternSwirl(CANVAS_WIDTH, CANVAS_HEIGHT),
-                                                 new PatternSpin(CANVAS_WIDTH, CANVAS_HEIGHT),
-                                                 new PatternPulse(CANVAS_WIDTH, CANVAS_HEIGHT),
-                                                 new PatternIncrementalDrift(CANVAS_WIDTH, CANVAS_HEIGHT),
-                                                 new PatternBTS(CANVAS_WIDTH, CANVAS_HEIGHT),
-                                                 new PatternCustomBit(CANVAS_WIDTH, CANVAS_HEIGHT)};
+    Drawable *matrixDraw[MATRIX_NUM_DRAWABLES] = {new PatternFire(CANVAS_WIDTH, CANVAS_HEIGHT),
+                                                  new PatternWave(CANVAS_WIDTH, CANVAS_HEIGHT),
+                                                  new PatternSpiro(CANVAS_WIDTH, CANVAS_HEIGHT),
+                                                  new PatternPlasma(CANVAS_WIDTH, CANVAS_HEIGHT),
+                                                  new PatternSwirl(CANVAS_WIDTH, CANVAS_HEIGHT),
+                                                  new PatternSpin(CANVAS_WIDTH, CANVAS_HEIGHT),
+                                                  new PatternPulse(CANVAS_WIDTH, CANVAS_HEIGHT),
+                                                  new PatternIncrementalDrift(CANVAS_WIDTH, CANVAS_HEIGHT),
+                                                  new PatternBTS(CANVAS_WIDTH, CANVAS_HEIGHT),
+                                                  new PatternCustomBit(CANVAS_WIDTH, CANVAS_HEIGHT)};
     Drawable *thisDrawable = matrixDraw[0];
 
 public:
@@ -80,12 +83,11 @@ public:
     Matrix() : ComponentLED("Matrix", gConfig.currentMatrixPattern) {}
 
     /**
-       * setup()
-       * This method initializes the LEDs and the class variables.
-       */
+     * setup()
+     * This method initializes the LEDs and the class variables.
+     */
     void setup()
     {
-        Serial.print("Matrix::setup()");
         FastLED.addLeds<MATRIX_CHIPSET, MATRIX_DATA_PIN, MATRIX_COLOR_ORDER>(myCanvas[0].getBuffer(), CANVAS_NUM_LEDS).setCorrection(TypicalLEDStrip);
         FastLED.setBrightness(MATRIX_BRIGHTNESS);
 
@@ -100,34 +102,66 @@ public:
        */
     virtual void switchPattern()
     {
+        //------------------------------------------------------------
+        // Clear the old Drawable
         myCanvas[0].fillScreen(CRGB::Black);
         thisDrawable->stop(myCanvas[0]);
-        
-        thisDrawable = getDrawable(getCurrentPatt());
 
+        //------------------------------------------------------------
+        // Switch to the new Drawable
+        thisDrawable = getDrawable(patt->getPattern());
+
+        //------------------------------------------------------------
+        // Initialize the new Drawable
         thisDrawable->start(myCanvas[0]);
-        thisDrawable->setPalette(matrixPalettes[random8(MATRIX_NUM_PALETTES)]);
+        thisDrawable->setPalette(arrMPal[random8(PALETTE_NUM)].pal);
     }
 
     /**
-       * drawPatt()
-       * Given a specific pattern string, draw the related pattern.
-       */
-    virtual unsigned int drawPattern(String patt)
+     * drawPatt()
+     * Given a specific pattern string, draw the related pattern.
+     */
+    virtual unsigned int drawPattern(String val)
     {
         //------------------------------------------------------------
         // Draw the pattern
         thisDrawable->drawFrame(myCanvas[0]);
-
         return 0;
     }
 
-    Drawable *getDrawable(String patt)
+    /**
+     * periodicAdjust()
+     * This method defines the periodic adjustments to class variables that
+     * keep the patterns moving 
+     */
+    virtual void periodicAdjust()
     {
-        for (int i = 0; i < MATRIX_NUM_PATTERNS; i++)
+        //--------------------------------------------------------------
+        // Switch cycle() pattern every 10 seconds
+        EVERY_N_SECONDS(10)
         {
-            if (matrixDraw[i]->name.equals(patt))
+            if (patt->isOnCycle())
+            {
+                patt->cycleNext();
+                switchPattern();
+            }
+            printCurrentPattern();
+        }
+    }
+
+    /**
+     * getDrawable()
+     * Given the name of a Drawable, return it.  If none can be found,
+     * return the first one.
+     */
+    Drawable *getDrawable(String val)
+    {
+        for (int i = 0; i < MATRIX_NUM_DRAWABLES; i++)
+        {
+            if (matrixDraw[i]->name.equals(val))
+            {
                 return matrixDraw[i];
+            }
         }
         return matrixDraw[0];
     }

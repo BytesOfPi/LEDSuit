@@ -1,5 +1,12 @@
 /*
- * Aurora: https://github.com/pixelmatix/aurora
+ * PatternFire.h: https://github.com/BytesOfPi/LEDSuit
+ * Copyright (c) 2020 Nathan DeGroff
+ * 
+ * Overview:
+ * This Drawable class defines and draws the matrix component Plasma pattern.
+ * Essentially a color palette fills the matrix and undulates in a wavy pattern.
+ * 
+ * Portions of this code are adapted from Aurora: https://github.com/pixelmatix/aurora
  * Copyright (c) 2014 Jason Coon
  *
  * Portions of this code are adapted from LedEffects Plasma by Robert Atkins: https://bitbucket.org/ratkins/ledeffects/src/26ed3c51912af6fac5f1304629c7b4ab7ac8ca4b/Plasma.cpp?at=default

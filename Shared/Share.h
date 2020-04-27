@@ -1,4 +1,28 @@
-
+/*
+ * Share.h: https://github.com/BytesOfPi/LEDSuit
+ * Copyright (c) 2020 Nathan DeGroff
+ *
+ * Overview:
+ * This file contains shared global definitions and variables used to coordinate
+ * efforts between classes.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
 #ifndef SharedValues_H
 #define SharedValues_H
@@ -97,15 +121,6 @@ String patternCape[] = {CAPE_PATT_CYCLE, CAPE_PATT_LIGHTSABER,
 #define CAPE_NUM_CYCLE_SKIP 1
 String patternCapeCycleSkip[] = {CAPE_PATT_CYCLE};
 
-// gConfig.currentCapePattern = new CPattern("cape", patternCape, CAPE_NUM_PATTERNS, patternCapeCycleSkip, CAPE_NUM_CYCLE_SKIP);
-
-//--------------------------------------------------------------
-// Current Cape configuration
-// gConfig.currentCapePattern = CAPE_PATT_CYCLE;
-// gConfig.currentCapePalette = PALETTE_PARTY;
-// gConfig.currentCapeSecPalette = PALETTE_FOREST;
-// gConfig.currentCapeColor = COLOR_BLUE;
-
 //#################################################################
 // Shared Matrix Values
 #define CANVAS_WIDTH 16
@@ -135,14 +150,6 @@ String patternMatrix[] = {MATRIX_PATT_CYCLE, MATRIX_PATT_FIRE,
                           MATRIX_PATT_CUSTOM};
 #define MATRIX_NUM_CYCLE_SKIP 2
 String patternMatrixCycleSkip[] = {MATRIX_PATT_CYCLE, MATRIX_PATT_CUSTOM};
-
-// gConfig.currentMatrixPattern = new CPattern("matrix", patternMatrix, MATRIX_NUM_PATTERNS, patternMatrixCycleSkip, MATRIX_NUM_CYCLE_SKIP);
-
-//--------------------------------------------------------------
-// Current Matrix configuration
-// gConfig.currentMatrixPattern = MATRIX_PATT_CYCLE;
-// gConfig.currentMatrixPalette = PALETTE_PARTY;
-// gConfig.currentMatrixColor = COLOR_BLUE;
 
 //#################################################################
 // Shared Suit Values
@@ -187,14 +194,6 @@ String patternSuit[] = {SUIT_PATT_CYCLE, SUIT_PATT_CCHS, SUIT_PATT_CCHS2, SUIT_P
 #define SUIT_NUM_CYCLE_SKIP 1
 String patternSuitCycleSkip[] = {SUIT_PATT_CYCLE};
 
-// gConfig.currentSuitPattern = new CPattern("suit", patternSuit, SUIT_NUM_PATTERNS, patternSuitCycleSkip, SUIT_NUM_CYCLE_SKIP);
-
-//--------------------------------------------------------------
-// Current Suit configuration
-// gConfig.currentSuitPattern = SUIT_PATT_CYCLE;
-// gConfig.currentSuitPalette = PALETTE_PARTY;
-// gConfig.currentSuitColor = COLOR_BLUE;
-
 //#################################################################
 // Full Outfit Combo
 #define FULL_PATT_CYCLE "cycle"
@@ -204,7 +203,7 @@ String patternSuitCycleSkip[] = {SUIT_PATT_CYCLE};
 #define FULL_PATT_BTS "bts"
 
 //#################################################################
-// create global config
+// Create global config
 GlobalConfig gConfig(
     new CPattern("cape", patternCape, CAPE_NUM_PATTERNS, patternCapeCycleSkip, CAPE_NUM_CYCLE_SKIP),
     new CPattern("matrix", patternMatrix, MATRIX_NUM_PATTERNS, patternMatrixCycleSkip, MATRIX_NUM_CYCLE_SKIP),

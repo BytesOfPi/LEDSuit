@@ -13,6 +13,12 @@ char keys[ROWS][COLS] = {
   {'*','0','#'}
 };
 
+//---------------------------------------------------------
+// OUTDATED: NEED TO REMOVE
+// Shared global PATTERN_NUMBER.  Tells / controls which
+// LED sequence is running
+byte PATTERN_NUMBER = 0;
+
 // Map Arduino pin numbers to the rows and columns
 // Remember left to right, first 4 pins are rows, next 3 are cols
 byte rowPins[ROWS] = {12, 14, 27, 26};

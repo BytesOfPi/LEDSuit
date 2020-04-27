@@ -1,6 +1,13 @@
 /*
- * ???: https://github.com/???
+ * Wing.h: https://github.com/BytesOfPi/LEDSuit
  * Copyright (c) 2020 Nathan DeGroff
+ *
+ * Overview:
+ * This file defines and controls a Wing component.  The Wing is either the left
+ * or right half of the cape.  It is a single chain of LEDs that loop from the top
+ * to the middle back extending out in Veins.  The component tracks the LED loop for
+ * patterns like chasers and full bpm patterns, but is divided into Veins for other
+ * complex patterns like fire or lightsaber.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in

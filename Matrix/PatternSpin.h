@@ -1,5 +1,14 @@
 /*
- * Aurora: https://github.com/pixelmatix/aurora
+ * PatternSpin.h: https://github.com/BytesOfPi/LEDSuit
+ * Copyright (c) 2020 Nathan DeGroff
+ * 
+ * Overview:
+ * This Drawable class defines and draws the matrix component spin pattern.
+ * 2 dots spin in a circle gradually speeding up and slowing down.  When sped up
+ * they should create a flashing circle.  NOTE:  I found as more controls were
+ * placed, they got considerably slower.
+ * 
+ * Portions of this code are adapted from Aurora: https://github.com/pixelmatix/aurora
  * Copyright (c) 2014 Jason Coon
  * 
  * Portions of this code are adapted for LED Costume

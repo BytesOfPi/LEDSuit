@@ -1,6 +1,10 @@
 /*
- * ???: https://github.com/???
+ * PatternCustomBit.h: https://github.com/BytesOfPi/LEDSuit
  * Copyright (c) 2020 Nathan DeGroff
+ *
+ * Overview:
+ * This Drawable class defines and draws the matrix component bitmap pattern.
+ * Just a little test on animating bitmaps on the matrix.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
