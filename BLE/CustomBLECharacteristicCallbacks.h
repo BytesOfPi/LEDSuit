@@ -29,84 +29,41 @@
 #include "../Shared/Share.h"
 #include "../Matrix/MatrixUtility.h"
 
-void setupSuit(String val, MPal pal = PALETTE_PARTY, MCol col = COLOR_BLUE)
-{
-  gConfig.currentSuitPattern->setPattern(val);
-  gConfig.currentSuitPalette = pal;
-  gConfig.currentSuitColor = col;
-  Serial.print("FULL: Suit[");
-  Serial.print(val);
-  Serial.print("][");
-  Serial.print(pal.name);
-  Serial.print("][");
-  Serial.print(col.name);
-  Serial.print("]");
-}
-void setupMatrix(String val, MPal pal = PALETTE_PARTY, MCol col = COLOR_BLUE)
-{
-  gConfig.currentMatrixPattern->setPattern(val);
-  gConfig.currentMatrixPalette = pal;
-  gConfig.currentMatrixColor = col;
-  Serial.print("FULL: Matrix[");
-  Serial.print(val);
-  Serial.print("][");
-  Serial.print(pal.name);
-  Serial.print("][");
-  Serial.print(col.name);
-  Serial.print("]");
-}
-void setupCape(String val, MPal pal = PALETTE_PARTY, MPal pal2 = PALETTE_PARTY, MCol col = COLOR_BLUE)
-{
-  gConfig.currentCapePattern->setPattern(val);
-  gConfig.currentCapePalette = pal;
-  gConfig.currentCapeSecPalette = pal2;
-  gConfig.currentCapeColor = col;
-  Serial.print("FULL: Cape[");
-  Serial.print(val);
-  Serial.print("][");
-  Serial.print(pal.name);
-  Serial.print("][");
-  Serial.print(pal2.name);
-  Serial.print("][");
-  Serial.print(col.name);
-  Serial.print("]");
-}
-
 void fullPattern(String val)
 {
   if (val.equals(FULL_PATT_CYCLE))
   {
-    setupSuit(SUIT_PATT_CYCLE);
-    setupMatrix(MATRIX_PATT_CYCLE);
-    setupCape(CAPE_PATT_CYCLE);
+    gConfig.holdSuitPattern = SUIT_PATT_CYCLE;
+    gConfig.holdMatrixPattern = MATRIX_PATT_CYCLE;
+    gConfig.holdCapePattern = CAPE_PATT_CYCLE;
     return;
   }
   if (val.equals(FULL_PATT_BPM))
   {
-    setupSuit(SUIT_PATT_BPM_PARTY, PALETTE_PARTY);
-    setupMatrix(MATRIX_PATT_WAVE, PALETTE_PARTY);
-    setupCape(CAPE_PATT_BPM, PALETTE_PARTY);
+    gConfig.holdSuitPattern = SUIT_PATT_BPM_PARTY;
+    gConfig.holdMatrixPattern = MATRIX_PATT_WAVE;
+    gConfig.holdCapePattern = CAPE_PATT_BPM;
     return;
   }
   if (val.equals(FULL_PATT_CCHS))
   {
-    setupSuit(SUIT_PATT_CCHS, PALETTE_CCHS);
-    setupMatrix(MATRIX_PATT_PULSE, PALETTE_CCHS);
-    setupCape(CAPE_PATT_JUGGLE, PALETTE_CCHS, PALETTE_CCHS);
+    gConfig.holdSuitPattern = SUIT_PATT_CCHS;
+    gConfig.holdMatrixPattern = MATRIX_PATT_PULSE;
+    gConfig.holdCapePattern = CAPE_PATT_JUGGLE;
     return;
   }
   if (val.equals(FULL_PATT_JUGGLE))
   {
-    setupSuit(SUIT_PATT_JUGGLE, PALETTE_PARTY);
-    setupMatrix(MATRIX_PATT_FIRE, PALETTE_HEAT);
-    setupCape(CAPE_PATT_JUGGLE, PALETTE_PARTY, PALETTE_PARTY);
+    gConfig.holdSuitPattern = SUIT_PATT_JUGGLE;
+    gConfig.holdMatrixPattern = MATRIX_PATT_FIRE;
+    gConfig.holdCapePattern = CAPE_PATT_JUGGLE;
     return;
   }
   if (val.equals(FULL_PATT_BTS))
   {
-    setupSuit(SUIT_PATT_CONFETTI, PALETTE_PARTY);
-    setupMatrix(MATRIX_PATT_BTS, PALETTE_HEAT);
-    setupCape(CAPE_PATT_SPARKLE, PALETTE_PARTY, PALETTE_PARTY);
+    gConfig.holdSuitPattern = SUIT_PATT_CONFETTI;
+    gConfig.holdMatrixPattern = MATRIX_PATT_BTS;
+    gConfig.holdCapePattern = CAPE_PATT_SPARKLE;
     return;
   }
 }
@@ -138,35 +95,49 @@ public:
     String val = String(value.c_str());
 
     // bleNotifyStrandMsg(val);
+
     // Route the string to the appropriate BLE handler
     switch (type)
     {
     // Set component pattern
     case BLE_FULL_CALLBACK:
+      // gConfig.holdFull = val;
       fullPattern(val);
       break;
     // Set component pattern
     case BLE_SUIT_PATT_CALLBACK:
+      gConfig.holdSuitPattern = val;
+      break;
     case BLE_MATRIX_PATT_CALLBACK:
+      gConfig.holdMatrixPattern = val;
+      break;
     case BLE_CAPE_PATT_CALLBACK:
-      blePattern(val, type);
+      //blePattern(val, type);
+      gConfig.holdCapePattern = val;
       break;
 
-    // Set component palette
-    case BLE_SUIT_PAL_CALLBACK:
-    case BLE_MATRIX_PAL_CALLBACK:
-    case BLE_CAPE_PAL_CALLBACK:
-    case BLE_CAPE_PAL_SEC_CALLBACK:
-      blePalette(val, type);
-      break;
-
-    // Set component color
-    case BLE_SUIT_COL_CALLBACK:
-    case BLE_MATRIX_COL_CALLBACK:
-    case BLE_CAPE_COL_CALLBACK:
-      bleColor(val, type);
+    // Check Prefix and strip off prefix before routing
+    case BLE_PAL_COL_CALLBACK:
+      if (val.startsWith(BLE_PREFIX_SUIT_PAL))
+        gConfig.holdSuitPal = val.substring(1);
+      else if (val.startsWith(BLE_PREFIX_SUIT_COL))
+        gConfig.holdSuitCol = val.substring(1);
+      else if (val.startsWith(BLE_PREFIX_MATRIX_PAL))
+        gConfig.holdMatrixPal = val.substring(1);
+      else if (val.startsWith(BLE_PREFIX_MATRIX_COL))
+        gConfig.holdMatrixCol = val.substring(1);
+      else if (val.startsWith(BLE_PREFIX_CAPE_PAL))
+        gConfig.holdCapePal = val.substring(1);
+      else if (val.startsWith(BLE_PREFIX_CAPE_PAL_SEC))
+        gConfig.holdCapeSecPal = val.substring(1);
+      else if (val.startsWith(BLE_PREFIX_CAPE_COL))
+        gConfig.holdCapeCol = val.substring(1);
       break;
     }
+    
+    //--------------------------------------------------------------
+    // Signal to main program that a change has been made
+    gConfig.change = true;
   }
 };
 

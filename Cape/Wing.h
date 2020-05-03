@@ -192,8 +192,10 @@ public:
         //------------------------------------------------------------
         // random colored speckles that blink in and fade smoothly
         fadeToBlackBy(myLeds, totLeds, 10);
-        int pos1 = random16(0, totSideLeds - 1);
-        int pos2 = random16(0, totSideLeds - 1);
+        // int pos1 = random16(0, totSideLeds - 1);
+        // int pos2 = random16(0, totSideLeds - 1);
+        int pos1 = random16(0, totSideLeds - 2);
+        int pos2 = random16(0, totSideLeds - 2);
 
         int randIndex = random8(8);
         CRGB fPal = palsF[randIndex];
@@ -219,8 +221,8 @@ public:
         // get a position between 0 and 255
         for (uint8_t i = 0; i < NUM_VEIN; i++)
         {
-            veinsFront[i].patternExtend(range);
-            veinsBack[i].patternExtend(range, true);
+            veinsFront[i].patternExtend(range, false, gConfig.currentCapeColor.rgb);
+            veinsBack[i].patternExtend(range, true, gConfig.currentCapeColor.rgb);
         }
     }
 

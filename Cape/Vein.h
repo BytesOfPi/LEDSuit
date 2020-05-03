@@ -166,7 +166,7 @@ public:
     }
 
     /**
-     * patternExtend()
+     * patternLightsaber()
      * This method will take value (extent) between 0-255 and draw  
      */
     void patternLightsaber(bool on, boolean revThis = false)
@@ -177,7 +177,7 @@ public:
         if (on && extend <= 255)
         {
             extend = min(hold + 10, 255);
-            patternExtend(extend, revThis);
+            patternExtend(extend, revThis, gConfig.currentCapeColor.rgb);
             return;
         }
         //------------------------------------------------------------
@@ -185,7 +185,7 @@ public:
         if (!on && extend > 0)
         {
             extend = max(hold - 10, 0);
-            patternExtend(extend, revThis);
+            patternExtend(extend, revThis, gConfig.currentCapeColor.rgb);
             return;
         }
     }

@@ -71,23 +71,23 @@ const TProgmemPalette16 myChristmasPalette_p PROGMEM =
 
 //#################################################################
 // BLE Shared values
-#define BLE_SUIT_PATT_CALLBACK 0x00
-#define BLE_SUIT_PAL_CALLBACK 0x01
-#define BLE_SUIT_COL_CALLBACK 0x02
+#define BLE_FULL_CALLBACK 0x00
+#define BLE_SUIT_PATT_CALLBACK 0x01
+#define BLE_MATRIX_PATT_CALLBACK 0x02
+#define BLE_CAPE_PATT_CALLBACK 0x03
 
-#define BLE_MATRIX_PATT_CALLBACK 0x03
-#define BLE_MATRIX_PAL_CALLBACK 0x04
-#define BLE_MATRIX_COL_CALLBACK 0x05
+#define BLE_PAL_COL_CALLBACK 0x04
 
-#define BLE_CAPE_PATT_CALLBACK 0x06
-#define BLE_CAPE_PAL_CALLBACK 0x07
-#define BLE_CAPE_PAL_SEC_CALLBACK 0x08
-#define BLE_CAPE_COL_CALLBACK 0x09
+#define BLE_PREFIX_SUIT_PAL "0"
+#define BLE_PREFIX_SUIT_PAL_SEC "1"
+#define BLE_PREFIX_SUIT_COL "2"
+#define BLE_PREFIX_MATRIX_PAL "3"
+#define BLE_PREFIX_MATRIX_PAL_SEC "4"
+#define BLE_PREFIX_MATRIX_COL "5"
+#define BLE_PREFIX_CAPE_PAL "6"
+#define BLE_PREFIX_CAPE_PAL_SEC "7"
+#define BLE_PREFIX_CAPE_COL "8"
 
-#define BLE_MATRIX_SCROLL_CALLBACK 0x0A
-#define BLE_MATRIX_TIMER_CALLBACK 0x0B
-
-#define BLE_FULL_CALLBACK 0x10
 
 //#################################################################
 // Shared Cape Values
@@ -209,82 +209,87 @@ GlobalConfig gConfig(
     new CPattern("matrix", patternMatrix, MATRIX_NUM_PATTERNS, patternMatrixCycleSkip, MATRIX_NUM_CYCLE_SKIP),
     new CPattern("suit", patternSuit, SUIT_NUM_PATTERNS, patternSuitCycleSkip, SUIT_NUM_CYCLE_SKIP));
 
-/*
- * bleSuitPattern()
- * This method is called from Bluetooth and directs what pattern
- * the suit will take on.
- */
-void blePattern(String val, uint8_t callback)
-{
-    switch (callback)
-    {
-    // Set component pattern
-    case BLE_SUIT_PATT_CALLBACK:
-        gConfig.currentSuitPattern->setPattern(val);
-        break;
-    case BLE_MATRIX_PATT_CALLBACK:
-        gConfig.currentMatrixPattern->setPattern(val);
-        break;
-    case BLE_CAPE_PATT_CALLBACK:
-        gConfig.currentCapePattern->setPattern(val);
-        break;
-    }
-}
-/*
- * blePalette()
- * This method is called from Bluetooth and directs what the 
- * current palette should be
- */
-void blePalette(String val, uint8_t callback)
-{
-    for (int i = 0; i < PALETTE_NUM; i++)
-    {
-        if (arrMPal[i].name.equals(val))
-        {
-            switch (callback)
-            {
-            case BLE_SUIT_PAL_CALLBACK:
-                gConfig.currentSuitPalette = arrMPal[i];
-                return;
-            case BLE_MATRIX_PAL_CALLBACK:
-                gConfig.currentMatrixPalette = arrMPal[i];
-                return;
-            case BLE_CAPE_PAL_CALLBACK:
-                gConfig.currentCapePalette = arrMPal[i];
-                return;
-            case BLE_CAPE_PAL_SEC_CALLBACK:
-                gConfig.currentCapeSecPalette = arrMPal[i];
-                return;
-            }
-        }
-    }
-}
+// /*
+//  * bleSuitPattern()
+//  * This method is called from Bluetooth and directs what pattern
+//  * the suit will take on.
+//  */
+// void blePattern(String val, uint8_t callback)
+// {
+//     switch (callback)
+//     {
+//     // Set component pattern
+//     case BLE_SUIT_PATT_CALLBACK:
+//         gConfig.currentSuitPattern->setPattern(val);
+//         break;
+//     case BLE_MATRIX_PATT_CALLBACK:
+//         gConfig.currentMatrixPattern->setPattern(val);
+//         break;
+//     case BLE_CAPE_PATT_CALLBACK:
+//         gConfig.currentCapePattern->setPattern(val);
+//         break;
+//     }
+// }
 
-/*
- * bleColor()
- * This method is called from Bluetooth and directs what the 
- * current color should be
- */
-void bleColor(String val, uint8_t callback)
-{
-    for (int i = 0; i < COLOR_NUM; i++)
-    {
-        if (arrMCol[i].name.equals(val))
-        {
-            switch (callback)
-            {
-            case BLE_SUIT_COL_CALLBACK:
-                gConfig.currentSuitColor = arrMCol[i];
-                return;
-            case BLE_MATRIX_COL_CALLBACK:
-                gConfig.currentMatrixColor = arrMCol[i];
-                return;
-            case BLE_CAPE_COL_CALLBACK:
-                gConfig.currentCapeColor = arrMCol[i];
-                return;
-            }
-        }
-    }
-}
+// /*
+//  * blePalette()
+//  * This method is called from Bluetooth and directs what the 
+//  * current palette should be
+//  */
+// void blePalette(String val, uint8_t type)
+// {
+//     for (int i = 0; i < PALETTE_NUM; i++)
+//     {
+//         if (arrMPal[i].name.equals(val))
+//         {
+//             Serial.print("PALETTE ");Serial.print(String(i));Serial.print(" ");Serial.print(val);
+//             switch (type)
+//             {
+//             case BLE_SUIT_TYPE:
+//                 gConfig.currentSuitPalette = arrMPal[i];
+//                 return;
+//             case BLE_MATRIX_TYPE:
+//                 gConfig.currentMatrixPalette = arrMPal[i];
+//                 return;
+//             case BLE_CAPE_TYPE:
+//                 gConfig.currentCapePalette = arrMPal[i];
+//                 return;
+//             case BLE_CAPE_TYPE_2:
+//                 gConfig.currentCapeSecPalette = arrMPal[i];
+//                 return;
+//             }
+//         }
+//     }
+//     Serial.println("PALETTE: COULDN't FIND");
+// }
+
+// /*
+//  * bleColor()
+//  * This method is called from Bluetooth and directs what the 
+//  * current color should be
+//  */
+// void bleColor(String val, uint8_t type)
+// {
+//     for (int i = 0; i < COLOR_NUM; i++)
+//     {
+//         if (arrMCol[i].name.equals(val))
+//         {
+//             Serial.print("COLOR ");Serial.print(String(i));Serial.print(" ");Serial.print(val);
+//             switch (type)
+//             {
+//             case BLE_SUIT_TYPE:
+//                 gConfig.currentSuitColor = arrMCol[i];
+//                 return;
+//             case BLE_MATRIX_TYPE:
+//                 gConfig.currentMatrixColor = arrMCol[i];
+//                 return;
+//             case BLE_CAPE_TYPE:
+//                 gConfig.currentCapeColor = arrMCol[i];
+//                 return;
+//             }
+//         }
+//     }
+//     Serial.println("COLOR: COULDN't FIND");
+// }
 
 #endif

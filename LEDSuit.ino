@@ -63,6 +63,9 @@ void setup()
  */
 void loop()
 {
+  // Check to see if we're changing any patterns from BLE Commands
+  gConfig.checkNextPattern();
+
   // Run loop specific to Keyboard logic
   keyboardLoop();
   // keyboardCycleLoop();

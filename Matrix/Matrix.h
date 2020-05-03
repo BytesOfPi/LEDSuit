@@ -114,7 +114,8 @@ public:
         //------------------------------------------------------------
         // Initialize the new Drawable
         thisDrawable->start(myCanvas[0]);
-        thisDrawable->setPalette(arrMPal[random8(PALETTE_NUM)].pal);
+        // thisDrawable->setPalette(arrMPal[random8(PALETTE_NUM)].pal);
+        thisDrawable->setPalette(gConfig.currentMatrixPalette.pal);
     }
 
     /**

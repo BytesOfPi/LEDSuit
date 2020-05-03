@@ -92,7 +92,8 @@ public:
       */
     virtual void printCurrentPattern()
     {
-        Serial.println(patt->toString());
+        // TODO: 
+        // Serial.println(patt->toString());
     }
 
     /**

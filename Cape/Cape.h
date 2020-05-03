@@ -177,7 +177,7 @@ public:
         CRGB *newRGB;
         for (int i = 0; i < NUM_LEDS_CAPE_RIGHT; i++)
         {
-            capeLedsRight[i] = ColorFromPalette(PartyColors_p, capeHue + (i * 2), beat - capeHue + (i * 10));
+            capeLedsRight[i] = ColorFromPalette(gConfig.currentCapePalette.pal, capeHue + (i * 2), beat - capeHue + (i * 10));
             if (i < NUM_LEDS_CAPE_LEFT)
             {
                 capeLedsLeft[i] = capeLedsRight[i];
@@ -197,8 +197,8 @@ public:
     int patternSparkle()
     {
         // Sparkling field on front and back of cape
-        lWing.patternPaletteConfetti(ForestColors_p, OceanColors_p, LINEARBLEND);
-        rWing.patternPaletteConfetti(ForestColors_p, OceanColors_p, LINEARBLEND);
+        lWing.patternPaletteConfetti(gConfig.currentCapePalette.pal, gConfig.currentCapeSecPalette.pal, LINEARBLEND);
+        rWing.patternPaletteConfetti(gConfig.currentCapePalette.pal, gConfig.currentCapeSecPalette.pal, LINEARBLEND);
         return 1;
     }
 

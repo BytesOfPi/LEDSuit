@@ -37,7 +37,7 @@ typedef struct MPal
 
 typedef struct MCol
 {
-    CRGB pal;
+    CRGB rgb;
     String name;
 };
 
