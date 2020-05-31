@@ -41,7 +41,11 @@
 class GlobalConfig
 {
 private:
-    void setupSuit(String val, MPal pal = PALETTE_PARTY, MCol col = COLOR_BLUE)
+    void setupSuit(String val)
+    {
+        setupSuit(val, currentSuitPalette, currentSuitColor);
+    }
+    void setupSuit(String val, MPal pal, MCol col)
     {
         currentSuitPattern->setPattern(val);
         currentSuitPalette = pal;
@@ -54,7 +58,11 @@ private:
         Serial.print(col.name);
         Serial.println("]");
     }
-    void setupMatrix(String val, MPal pal = PALETTE_PARTY, MCol col = COLOR_BLUE)
+    void setupMatrix(String val)
+    {
+        setupMatrix(val, currentMatrixPalette, currentMatrixColor);
+    }
+    void setupMatrix(String val, MPal pal, MCol col)
     {
         currentMatrixPattern->setPattern(val);
         currentMatrixPalette = pal;
@@ -67,7 +75,11 @@ private:
         Serial.print(col.name);
         Serial.println("]");
     }
-    void setupCape(String val, MPal pal = PALETTE_PARTY, MPal pal2 = PALETTE_PARTY, MCol col = COLOR_BLUE)
+    void setupCape(String val)
+    {
+        setupCape(val, currentCapePalette, currentCapeSecPalette, currentCapeColor);
+    }
+    void setupCape(String val, MPal pal, MPal pal2, MCol col)
     {
         currentCapePattern->setPattern(val);
         currentCapePalette = pal;
@@ -90,10 +102,13 @@ private:
         {
             if (arrMPal[i].name.equals(val))
             {
-                Serial.print("PALETTE ");
-                Serial.print(String(i));
-                Serial.print(" ");
+                Serial.print("PALETTE [");
+                Serial.print(type);
+                Serial.print("][");
                 Serial.print(val);
+                Serial.print("][");
+                Serial.print(String(i));
+                Serial.println("]");
                 switch (type)
                 {
                 case BLE_SUIT_TYPE:
@@ -142,6 +157,9 @@ private:
 
 public:
     boolean change = false;
+    boolean changeSuit = false;
+    boolean changeMatrix = false;
+    boolean changeCape = false;
     String holdSuitPal = NO_CHANGE;
     String holdSuitCol = NO_CHANGE;
     String holdMatrixPal = NO_CHANGE;
@@ -194,6 +212,7 @@ public:
         {
             setupSuit(holdSuitPattern);
             holdSuitPattern = NO_CHANGE;
+            changeSuit = true;
         }
         //--------------------------------------------------------------
         // Change to full pattern and turn off change
@@ -201,6 +220,7 @@ public:
         {
             setupMatrix(holdMatrixPattern);
             holdMatrixPattern = NO_CHANGE;
+            changeMatrix = true;
         }
         //--------------------------------------------------------------
         // Change to full pattern and turn off change
@@ -208,42 +228,52 @@ public:
         {
             setupCape(holdCapePattern);
             holdCapePattern = NO_CHANGE;
+            changeCape = true;
         }
 
         if (!holdSuitPal.equals(NO_CHANGE))
         {
             setupPalette(holdSuitPal, BLE_SUIT_TYPE);
             holdSuitPal = NO_CHANGE;
+            changeSuit = true;
         }
         if (!holdSuitCol.equals(NO_CHANGE))
         {
             setupColor(holdSuitCol, BLE_SUIT_TYPE);
             holdSuitCol = NO_CHANGE;
+            changeSuit = true;
         }
         if (!holdMatrixPal.equals(NO_CHANGE))
         {
             setupPalette(holdMatrixPal, BLE_MATRIX_TYPE);
             holdMatrixPal = NO_CHANGE;
+            changeMatrix = true;
         }
         if (!holdMatrixCol.equals(NO_CHANGE))
         {
             setupColor(holdMatrixCol, BLE_MATRIX_TYPE);
             holdMatrixCol = NO_CHANGE;
+            changeMatrix = true;
         }
         if (!holdCapePal.equals(NO_CHANGE))
         {
             setupPalette(holdCapePal, BLE_CAPE_TYPE);
             holdCapePal = NO_CHANGE;
+            changeCape = true;
         }
         if (!holdCapeSecPal.equals(NO_CHANGE))
         {
+            Serial.println("TRACE B");
             setupPalette(holdCapeSecPal, BLE_CAPE_TYPE_2);
             holdCapeSecPal = NO_CHANGE;
+            Serial.println("TRACE C");
+            changeCape = true;
         }
         if (!holdCapeCol.equals(NO_CHANGE))
         {
             setupColor(holdCapeCol, BLE_CAPE_TYPE);
             holdCapeCol = NO_CHANGE;
+            changeCape = true;
         }
     }
 };

@@ -57,6 +57,16 @@ public:
     }
 
     /**
+      * checkGlobal()
+      * This method checks the global palettes and colors to see if anything
+      * changed
+      */
+    virtual void checkGlobal()
+    {
+        // TODO: Implement 
+    }
+
+    /**
       * getCurrentPatt()
       * This method return's the component's current selected pattern.
       */
@@ -93,7 +103,6 @@ public:
     virtual void printCurrentPattern()
     {
         // TODO: 
-        // Serial.println(patt->toString());
     }
 
     /**

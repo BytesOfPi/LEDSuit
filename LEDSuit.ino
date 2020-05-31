@@ -42,20 +42,25 @@ void setup()
   Serial.begin(115200);
   Serial.println(F("Starting connection"));
 
+  // 3 second delay before BLE setup
+  delay(3000); 
+
   // Run Setup specific to BLE logic
   bleSetup();
 
   // 3 second delay to allow capacitor to fill up and LEDs to juice up.
   delay(3000); 
 
-  // Run Setup specific to LED logic
-  ledSetup();
+  // Run Setup specific to suit
+  suitSetup();
 
   // LED Matrix setup
   matrixSetup();
 
   // Cape setup
   capeSetup();
+
+  Serial.println(F("Setup complete!"));
 }
 
 /*
@@ -74,7 +79,7 @@ void loop()
   bleLoop();
 
   // Run loop specific to LED logic
-  ledLoop();
+  suitLoop();
 
   // Run loop specific to matrix
   matrixLoop();

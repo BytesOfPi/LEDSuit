@@ -28,6 +28,9 @@ void capeSetup()
 void capeLoop()
 {
     //--------------------------------------------------------------
+    // Check for global config change
+    cape->checkGlobal();
+    //--------------------------------------------------------------
     // Draw Cape LEDs
     cape->drawFrame();
 }

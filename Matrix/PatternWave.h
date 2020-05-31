@@ -77,11 +77,6 @@ public:
         shiftPattern();
     }
 
-    void setPalette(CRGBPalette16 &newPal)
-    {
-        // pal = newPal;
-    }
-
     /* drawFrame()
      * Primary method that draws the next frame
      */

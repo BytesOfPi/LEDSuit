@@ -35,12 +35,15 @@ void matrixLoop()
     //     timer.drawFrame(canvas);
     //     return;
     // }
+    //--------------------------------------------------------------
+    // Check for global config change
+    matrix->checkGlobal();
 
     //--------------------------------------------------------------
     // Setup Matrix LEDs and class
     matrix->drawFrame();
 
-    // //--------------------------------------------------------------
-    // // Draw scrolling frame
-    // scroll.drawFrame(canvas);
+    //--------------------------------------------------------------
+    // Draw scrolling frame
+    scroll.drawFrame(matrix->getCanvas());
 }

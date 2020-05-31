@@ -52,10 +52,7 @@ public:
 
     void setShowText(boolean show)
     {
-        if (show == true)
-        {
-            reset();
-        }
+        reset();
         display = show;
     }
     boolean isShowText()
@@ -107,7 +104,6 @@ public:
         nextX--;
         if (cursorX <= 0)
         {
-            Serial.print("Moving on");
             nextX = MATRIX_WIDTH;
             pass = (pass < 2) ? pass + 1 : 0;
             return false;

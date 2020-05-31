@@ -56,7 +56,7 @@ void bleMatrixScroll(String val)
   Serial.println(msg);
 
   // Clear out existing message
-  if (val.startsWith("***"))
+  if (val.startsWith("@@@"))
   {
     scroll.setMsg("");
     return;
@@ -68,7 +68,7 @@ void bleMatrixScroll(String val)
     return;
   }
   // Stop showing message
-  if (val.startsWith("@@@"))
+  if (val.startsWith("***"))
   {
     scroll.setShowText(false);
     return;

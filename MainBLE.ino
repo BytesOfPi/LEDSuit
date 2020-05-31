@@ -28,11 +28,12 @@ uint32_t value = 0;
 #include "BLE/MyServerCallbacks.h"
 #include "BLE/CustomBLECharacteristicCallbacks.h"
 
-void createBLECharacteristic(BLEService *pService, const char *uuid, uint8_t bleID, const char *msg)
+void createBLECharacteristic(BLEService *pService, BLECharacteristicCallbacks* pCallbacks, const char *uuid, uint8_t bleID, const char *msg)
 {
     BLECharacteristic *pCharGetMsg = pService->createCharacteristic(
-        uuid, BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE);
-    pCharGetMsg->setCallbacks(new CustomBLECharacteristicCallbacks(bleID));
+        uuid, BLECharacteristic::PROPERTY_WRITE ); // BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE
+    //pCharGetMsg->setCallbacks(new CustomBLECharacteristicCallbacks(bleID));
+    pCharGetMsg->setCallbacks(pCallbacks);
     pCharGetMsg->setValue(msg);
 }
 
@@ -49,6 +50,7 @@ void bleSetup()
     //--------------------------------------------------------------
     // Step 1: Create the service and set it up with the writable characteristic
     BLEService *pService = pServer->createService(SERVICE_UUID);
+    BLECharacteristicCallbacks* pCallbacks = new CustomBLECharacteristicCallbacks();
 
     //--------------------------------------------------------------
     // Step 2: Setup the Notify Pattern Message Characteristic
@@ -64,84 +66,18 @@ void bleSetup()
 
     //--------------------------------------------------------------
     // Step 3: Setup the FULL Outfit Pattern Message Characteristics
-    createBLECharacteristic(pService,
+    createBLECharacteristic(pService, pCallbacks,
                             CHARACTERISTIC_GET_FULL_PATT_UUID,
                             BLE_FULL_CALLBACK,
                             "Full outfit");
 
     //--------------------------------------------------------------
-    // Step 4: Setup the Get PATTERN Message Characteristics
-    createBLECharacteristic(pService,
-                            CHARACTERISTIC_GET_SUIT_PATT_UUID,
-                            BLE_SUIT_PATT_CALLBACK,
-                            "Suit Pattern");
-    createBLECharacteristic(pService,
-                            CHARACTERISTIC_GET_MATRIX_PATT_UUID,
-                            BLE_MATRIX_PATT_CALLBACK,
-                            "Matrix Pattern");
-    createBLECharacteristic(pService,
-                            CHARACTERISTIC_GET_CAPE_PATT_UUID,
-                            BLE_CAPE_PATT_CALLBACK,
-                            "Cape Pattern");
-
-    //--------------------------------------------------------------
-    // Step 5: Setup the Get PALETTE Message Characteristics
-    createBLECharacteristic(pService,
-                            CHARACTERISTIC_GET_PAL_COL_UUID,
-                            BLE_PAL_COL_CALLBACK,
-                            "SuitPal");
-    /*
-    createBLECharacteristic(pService,
-                            CHARACTERISTIC_GET_MATRIX_PAL_UUID,
-                            BLE_MATRIX_PAL_CALLBACK,
-                            "MatrixPal");
-    createBLECharacteristic(pService,
-                            CHARACTERISTIC_GET_CAPE_PAL_UUID,
-                            BLE_CAPE_PAL_CALLBACK,
-                            "CapePal1");
-    createBLECharacteristic(pService,
-                            CHARACTERISTIC_GET_CAPE_PAL_SEC_UUID,
-                            BLE_CAPE_PAL_SEC_CALLBACK,
-                            "CapePal2");
-
-    //--------------------------------------------------------------
-    // Step 6: Setup the Get COLOR Message Characteristics
-    createBLECharacteristic(pService,
-                            CHARACTERISTIC_GET_SUIT_COL_UUID,
-                            BLE_SUIT_COL_CALLBACK,
-                            "Suit Color");
-    createBLECharacteristic(pService,
-                            CHARACTERISTIC_GET_MATRIX_COL_UUID,
-                            BLE_MATRIX_COL_CALLBACK,
-                            "Matrix Color");
-    createBLECharacteristic(pService,
-                            CHARACTERISTIC_GET_CAPE_COL_UUID,
-                            BLE_CAPE_COL_CALLBACK,
-                            "Cape Color");
-
-    //--------------------------------------------------------------
     // Step 7: Setup the Get LED Matrix SCROLL Message Characteristic
-    createBLECharacteristic(pService,
+    createBLECharacteristic(pService, pCallbacks,
                             CHARACTERISTIC_GET_MATRIX_SCROLL_UUID,
                             BLE_MATRIX_SCROLL_CALLBACK,
                             "Matrix Scroll");
-    // pCharGetMsg = pService->createCharacteristic(
-    //     CHARACTERISTIC_GET_MATRIX_SCROLL_UUID,
-    //     BLECharacteristic::PROPERTY_READ |
-    //         BLECharacteristic::PROPERTY_WRITE);
-    // pCharGetMsg->setCallbacks(new CustomBLECharacteristicCallbacks(BLE_MATRIX_SCROLL_CALLBACK));
-    // pCharGetMsg->setValue("Matrix Scroll");
 
-    /*
-    //--------------------------------------------------------------
-    // Step 8: Setup the Get LED Matrix TIMER Message Characteristic
-    pCharGetMsg = pService->createCharacteristic(
-        CHARACTERISTIC_GET_MATRIX_TIMER_UUID,
-        BLECharacteristic::PROPERTY_READ |
-            BLECharacteristic::PROPERTY_WRITE);
-    pCharGetMsg->setCallbacks(new CustomBLECharacteristicCallbacks(BLE_MATRIX_TIMER_CALLBACK));
-    pCharGetMsg->setValue("Matrix Timer");
-    */
     //--------------------------------------------------------------
     // Step 9: Start Service
     pService->start();

@@ -15,10 +15,10 @@ Suit* suit = new Suit();
 //#################################################################
 // setup() and loop()
 /*
- * ledSetup()
+ * suitSetup()
  * This method is invoked at the start to set up the LEDs and necessary values
  */
-void ledSetup()
+void suitSetup()
 {
     //--------------------------------------------------------------
     // Setup Suit LEDs
@@ -26,10 +26,10 @@ void ledSetup()
 }
 
 /*
- * ledLoop()
+ * suitLoop()
  * This method is invoked each time to draw LEDs
  */
-void ledLoop()
+void suitLoop()
 {
     //--------------------------------------------------------------
     // Draw Suit LEDs

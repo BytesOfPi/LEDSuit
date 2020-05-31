@@ -61,6 +61,8 @@
 class Cape : public ComponentLED
 {
 private:
+    CRGBPalette16 pal1;
+    CRGBPalette16 pal2;
     CRGB capeLedsLeft[NUM_LEDS_CAPE_LEFT];
     CRGB capeLedsRight[NUM_LEDS_CAPE_RIGHT];
 
@@ -102,12 +104,31 @@ public:
     }
 
     /**
+      * checkGlobal()
+      * This method checks the global palettes and colors to see if anything
+      * changed
+      */
+    virtual void checkGlobal()
+    {
+        if(gConfig.changeCape)
+        {
+            Serial.println("TRACE D");
+            Serial.println("Cape Config Change");
+            pal1 = gConfig.currentCapePalette.pal;
+            pal2 = gConfig.currentCapeSecPalette.pal;
+            gConfig.changeCape = false;
+        }
+    }
+
+    /**
      * switchPattern()
      * This method is called every time there is a pattern switch.  This will allow
      * us to reset any stored values that patterns use 
      */
     virtual void switchPattern()
     {
+        pal1 = gConfig.currentCapePalette.pal;
+        pal2 = gConfig.currentCapeSecPalette.pal;
         lWing.switchPattern();
         rWing.switchPattern();
     }
@@ -177,7 +198,7 @@ public:
         CRGB *newRGB;
         for (int i = 0; i < NUM_LEDS_CAPE_RIGHT; i++)
         {
-            capeLedsRight[i] = ColorFromPalette(gConfig.currentCapePalette.pal, capeHue + (i * 2), beat - capeHue + (i * 10));
+            capeLedsRight[i] = ColorFromPalette(pal1, capeHue + (i * 2), beat - capeHue + (i * 10));
             if (i < NUM_LEDS_CAPE_LEFT)
             {
                 capeLedsLeft[i] = capeLedsRight[i];
@@ -197,8 +218,8 @@ public:
     int patternSparkle()
     {
         // Sparkling field on front and back of cape
-        lWing.patternPaletteConfetti(gConfig.currentCapePalette.pal, gConfig.currentCapeSecPalette.pal, LINEARBLEND);
-        rWing.patternPaletteConfetti(gConfig.currentCapePalette.pal, gConfig.currentCapeSecPalette.pal, LINEARBLEND);
+        lWing.patternPaletteConfetti(pal1, pal2, LINEARBLEND);
+        rWing.patternPaletteConfetti(pal1, pal2, LINEARBLEND);
         return 1;
     }
 

@@ -96,6 +96,21 @@ public:
     }
 
     /**
+      * checkGlobal()
+      * This method checks the global palettes and colors to see if anything
+      * changed
+      */
+    virtual void checkGlobal()
+    {
+        if(gConfig.changeMatrix)
+        {
+            Serial.println("Matrix Config Change");
+            thisDrawable->setPalette(gConfig.currentMatrixPalette.pal);
+            gConfig.changeMatrix = false;
+        }
+    }
+
+    /**
        * switchPattern()
        * This method is called every time there is a pattern switch.  This will allow
        * us to reset any stored values that patterns use 
@@ -118,6 +133,10 @@ public:
         thisDrawable->setPalette(gConfig.currentMatrixPalette.pal);
     }
 
+    virtual GFXcanvas getCanvas()
+    {
+        return *myCanvas;
+    }
     /**
      * drawPatt()
      * Given a specific pattern string, draw the related pattern.

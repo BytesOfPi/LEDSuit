@@ -70,21 +70,18 @@ void fullPattern(String val)
 
 class CustomBLECharacteristicCallbacks : public BLECharacteristicCallbacks
 {
-private:
-  uint8_t type;
-
 public:
   //--------------------------------------------------------------
   // Constructor
-  CustomBLECharacteristicCallbacks(uint8_t val) : BLECharacteristicCallbacks()
+  CustomBLECharacteristicCallbacks() : BLECharacteristicCallbacks()
   {
-    type = val;
   }
 
   void onWrite(BLECharacteristic *pCharacteristic)
   {
     // Get value from characteristic
     std::string value = pCharacteristic->getValue();
+    String thisCharUUID = String(pCharacteristic->getUUID().toString().c_str());
 
     // If nothing was sent, return early
     if (value.length() <= 0)
@@ -94,50 +91,71 @@ public:
     // Convert value to a String
     String val = String(value.c_str());
 
-    // bleNotifyStrandMsg(val);
-
-    // Route the string to the appropriate BLE handler
-    switch (type)
+    // Consolidating Characteristics into one with a prefix
+    // Evaluate prefix before routing to next path
+    if (String(CHARACTERISTIC_GET_FULL_PATT_UUID).equals(thisCharUUID))
     {
-    // Set component pattern
-    case BLE_FULL_CALLBACK:
-      // gConfig.holdFull = val;
-      fullPattern(val);
-      break;
-    // Set component pattern
-    case BLE_SUIT_PATT_CALLBACK:
-      gConfig.holdSuitPattern = val;
-      break;
-    case BLE_MATRIX_PATT_CALLBACK:
-      gConfig.holdMatrixPattern = val;
-      break;
-    case BLE_CAPE_PATT_CALLBACK:
-      //blePattern(val, type);
-      gConfig.holdCapePattern = val;
-      break;
-
-    // Check Prefix and strip off prefix before routing
-    case BLE_PAL_COL_CALLBACK:
-      if (val.startsWith(BLE_PREFIX_SUIT_PAL))
-        gConfig.holdSuitPal = val.substring(1);
-      else if (val.startsWith(BLE_PREFIX_SUIT_COL))
-        gConfig.holdSuitCol = val.substring(1);
-      else if (val.startsWith(BLE_PREFIX_MATRIX_PAL))
-        gConfig.holdMatrixPal = val.substring(1);
-      else if (val.startsWith(BLE_PREFIX_MATRIX_COL))
-        gConfig.holdMatrixCol = val.substring(1);
-      else if (val.startsWith(BLE_PREFIX_CAPE_PAL))
-        gConfig.holdCapePal = val.substring(1);
-      else if (val.startsWith(BLE_PREFIX_CAPE_PAL_SEC))
-        gConfig.holdCapeSecPal = val.substring(1);
-      else if (val.startsWith(BLE_PREFIX_CAPE_COL))
-        gConfig.holdCapeCol = val.substring(1);
-      break;
+      String trimVal = val.substring(1);
+      switch (val.charAt(0))
+      {
+      // '0' = Full outfit pattern
+      case '0':
+        fullPattern(trimVal);
+        break;
+      // '1' = Body suit pattern
+      case '1':
+        gConfig.holdSuitPattern = trimVal;
+        break;
+      // '2' = Matrix pattern
+      case '2':
+        gConfig.holdMatrixPattern = trimVal;
+        break;
+      // '3' = Cape pattern
+      case '3':
+        gConfig.holdCapePattern = trimVal;
+        break;
+      // '4' = Palette/Color pattern
+      case '4':
+        char prefix = trimVal.charAt(0);
+        trimVal = trimVal.substring(1);
+        Serial.print("PREFIX: ");
+        Serial.print(String(prefix));
+        switch (prefix)
+        {
+        case BLE_PREFIX_SUIT_PAL:
+          gConfig.holdSuitPal = trimVal;
+          break;
+        case BLE_PREFIX_SUIT_COL:
+          gConfig.holdSuitCol = trimVal;
+          break;
+        case BLE_PREFIX_MATRIX_PAL:
+          gConfig.holdMatrixPal = trimVal;
+          break;
+        case BLE_PREFIX_MATRIX_COL:
+          gConfig.holdMatrixCol = trimVal;
+          break;
+        case BLE_PREFIX_CAPE_PAL:
+          gConfig.holdCapePal = trimVal;
+          break;
+        case BLE_PREFIX_CAPE_PAL_SEC:
+          Serial.println("TRACE A");
+          gConfig.holdCapeSecPal = trimVal;
+          break;
+        case BLE_PREFIX_CAPE_COL:
+          gConfig.holdCapeCol = trimVal;
+          break;
+        }
+      }
     }
-    
+    // Scroll Command
+    else if (String(CHARACTERISTIC_GET_MATRIX_SCROLL_UUID).equals(thisCharUUID))
+    {
+      bleMatrixScroll(val);
+    }
     //--------------------------------------------------------------
     // Signal to main program that a change has been made
     gConfig.change = true;
+
   }
 };
 

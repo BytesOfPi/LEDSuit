@@ -71,13 +71,12 @@ public:
 
         // The color of each point shifts over time, each at a different speed.
         uint16_t ms = millis();
-        canvas.drawCircle(i, j, 1, getColor(ms / 11)); // possibly use pal
-        canvas.drawCircle(j, i, 1, getColor(ms / 13));
-        canvas.drawCircle(ni, nj, 1, getColor(ms / 17));
-        canvas.drawCircle(nj, ni, 1, getColor(ms / 29));
-        canvas.drawCircle(i, nj, 1, getColor(ms / 37));
-        canvas.drawCircle(ni, j, 1, getColor(ms / 41));
-
+        canvas.drawCircle(i, j, 1, getColor(pal, ms / 11)); // possibly use pal getColor(,ms / 11));
+        canvas.drawCircle(j, i, 1, getColor(pal, ms / 13));
+        canvas.drawCircle(ni, nj, 1, getColor(pal, ms / 17));
+        canvas.drawCircle(nj, ni, 1, getColor(pal, ms / 29));
+        canvas.drawCircle(i, nj, 1, getColor(pal, ms / 37));
+        canvas.drawCircle(ni, j, 1, getColor(pal, ms / 41));
         return 0;
     }
 };
