@@ -61,6 +61,8 @@
 class Cape : public ComponentLED
 {
 private:
+    uint8_t CAPE_STD_COLOR_INDEX_INC = 3;
+    uint8_t CAPE_STD_BRIGHTNESS = 175;
     CRGBPalette16 pal1;
     CRGBPalette16 pal2;
     CRGB capeLedsLeft[NUM_LEDS_CAPE_LEFT];
@@ -112,7 +114,6 @@ public:
     {
         if(gConfig.changeCape)
         {
-            Serial.println("TRACE D");
             Serial.println("Cape Config Change");
             pal1 = gConfig.currentCapePalette.pal;
             pal2 = gConfig.currentCapeSecPalette.pal;
@@ -147,6 +148,7 @@ public:
         if (val.equals(CAPE_PATT_JUGGLE)) return patternJuggle();
         if (val.equals(CAPE_PATT_BPM)) return patternBPM();
         if (val.equals(CAPE_PATT_FIRE)) return patternFire();
+        if (val.equals(CAPE_PATT_FLOW)) return patternFlow();
 
         return 0;
     }
@@ -189,13 +191,15 @@ public:
     //#################################################################
     // PATTERNS
     //#################################################################
+    /**
+     * patternBPM()
+     * This pattern rocks the first palette back and forth across the entire cape 
+     */
     int patternBPM()
     {
         // colored stripes pulsing at a defined Beats-Per-Minute (BPM)
         uint8_t BeatsPerMinute = 62;
         uint8_t beat = beatsin8(BeatsPerMinute, 64, 255);
-        //for (int i = 0; i < NUM_LEDS_CAPE_LEFT; i++)
-        CRGB *newRGB;
         for (int i = 0; i < NUM_LEDS_CAPE_RIGHT; i++)
         {
             capeLedsRight[i] = ColorFromPalette(pal1, capeHue + (i * 2), beat - capeHue + (i * 10));
@@ -207,6 +211,11 @@ public:
         return 1;
     }
 
+    /**
+     * patternJuggle()
+     * This pattern passes 4 multicolored tracers (2 on front / 2 on back) back and forth from 
+     * wingtip to center and then back
+     */
     int patternJuggle()
     {
         // colored stripes pulsing at a defined Beats-Per-Minute (BPM)
@@ -215,6 +224,10 @@ public:
         return 1;
     }
 
+    /**
+     * patternSparkle()
+     * This pattern sparkles 2 different palettes (pal1 on front, pal2 on back) of cape
+     */
     int patternSparkle()
     {
         // Sparkling field on front and back of cape
@@ -223,6 +236,10 @@ public:
         return 1;
     }
 
+    /**
+     * patternSparkle()
+     * This pattern spreads out from backpack to end of cape and back the given line color
+     */
     int patternExtend()
     {
         // Sparkling field on front and back of cape
@@ -231,6 +248,10 @@ public:
         return 1;
     }
 
+    /**
+     * patternFire()
+     * This pattern radiates fire from center of cape outward
+     */
     int patternFire()
     {
         // Fire?
@@ -239,6 +260,21 @@ public:
         return 1;
     }
 
+    /**
+     * patternFlow()
+     * This pattern takes pal1 and makes it flow throughout cape (Like suit palette pattern)
+     */
+    int patternFlow()
+    {        
+        fill_palette(capeLedsLeft, NUM_LEDS_CAPE_LEFT, startIndex, CAPE_STD_COLOR_INDEX_INC, pal1, CAPE_STD_BRIGHTNESS, LINEARBLEND);
+        fill_palette(capeLedsRight, NUM_LEDS_CAPE_RIGHT, startIndex, CAPE_STD_COLOR_INDEX_INC, pal1, CAPE_STD_BRIGHTNESS, LINEARBLEND);
+    }
+
+    /**
+     * patternLightsaber()
+     * This pattern goes left to right across cape.  It starts at first vein and extends light to end.
+     * Once it reaches the end, it goes to next vein and so forth.
+     */
     int patternLightsaber()
     {
         //------------------------------------------------------------

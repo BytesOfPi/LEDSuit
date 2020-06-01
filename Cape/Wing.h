@@ -91,7 +91,7 @@ public:
 
         //--------------------------------------------------------------
         // Add entropy to random generator
-        random16_add_entropy(random(65535));
+        random16_add_entropy(random16());
     }
 
     /**

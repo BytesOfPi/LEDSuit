@@ -112,12 +112,13 @@ uint16_t backMask[] = {CAPE_BACK_VEIN_01, CAPE_BACK_VEIN_02, CAPE_BACK_VEIN_03, 
 #define CAPE_PATT_JUGGLE "juggle"
 #define CAPE_PATT_BPM "bpm"
 #define CAPE_PATT_FIRE "fire"
+#define CAPE_PATT_FLOW "flow"
 
-#define CAPE_NUM_PATTERNS 7
+#define CAPE_NUM_PATTERNS 8
 String patternCape[] = {CAPE_PATT_CYCLE, CAPE_PATT_LIGHTSABER,
                         CAPE_PATT_SPARKLE, CAPE_PATT_EXTEND,
                         CAPE_PATT_JUGGLE, CAPE_PATT_BPM,
-                        CAPE_PATT_FIRE};
+                        CAPE_PATT_FIRE, CAPE_PATT_FLOW};
 #define CAPE_NUM_CYCLE_SKIP 1
 String patternCapeCycleSkip[] = {CAPE_PATT_CYCLE};
 

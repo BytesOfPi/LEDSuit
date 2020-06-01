@@ -65,8 +65,8 @@ public:
     void shiftPattern()
     {
         random16_add_entropy(random16());
-        rotation = random(0, 4);
-        waveCount = random(1, 3);
+        rotation = random8(0, 4);
+        waveCount = random8(1, 3);
     }
 
     /* start()

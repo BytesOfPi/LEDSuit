@@ -138,7 +138,6 @@ public:
           gConfig.holdCapePal = trimVal;
           break;
         case BLE_PREFIX_CAPE_PAL_SEC:
-          Serial.println("TRACE A");
           gConfig.holdCapeSecPal = trimVal;
           break;
         case BLE_PREFIX_CAPE_COL:

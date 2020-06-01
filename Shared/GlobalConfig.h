@@ -263,10 +263,8 @@ public:
         }
         if (!holdCapeSecPal.equals(NO_CHANGE))
         {
-            Serial.println("TRACE B");
             setupPalette(holdCapeSecPal, BLE_CAPE_TYPE_2);
             holdCapeSecPal = NO_CHANGE;
-            Serial.println("TRACE C");
             changeCape = true;
         }
         if (!holdCapeCol.equals(NO_CHANGE))

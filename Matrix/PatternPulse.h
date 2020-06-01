@@ -76,9 +76,9 @@ public:
             // Pick a random starting point and color for a pulse
             if (step == -1)
             {
-                centerX = random(MATRIX_WIDTH);
-                centerY = random(MATRIX_HEIGHT);
-                hue = random(256); // 170;
+                centerX = random8(MATRIX_WIDTH);
+                centerY = random8(MATRIX_HEIGHT);
+                hue = random8(256); // 170;
                 step = 0;
             }
 
