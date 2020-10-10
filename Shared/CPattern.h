@@ -154,7 +154,7 @@ public:
 
     /**
      * isOnCycle()
-     * Determines if the component is cycling through patterns or not
+     * Determines if the component is AUTOMATICALLY cycling through patterns or not
      */
     boolean isOnCycle() { return thisIndex == 0; }
 
@@ -206,6 +206,16 @@ public:
         //---------------------------------------------------------
         // Go forward to the next safe index (using skip list)
         _changeIndex(true);
+    }
+
+    /* bumpNext()
+     * Used to bump the non automatic index to the next pattern
+     * Used when bumping using Button control
+     */
+    void bumpNext()
+    {
+        thisIndex = SAFE_NEXT_PATTERN(thisIndex, numPatterns);
+        isNew = true;
     }
 
     String toString()

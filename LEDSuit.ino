@@ -51,6 +51,9 @@ void setup()
   // 3 second delay to allow capacitor to fill up and LEDs to juice up.
   delay(3000); 
 
+  // Handle/Button control Setup
+  controlSetup();
+
   // Run Setup specific to suit
   suitSetup();
 
@@ -73,7 +76,9 @@ void loop()
 
   // Run loop specific to Keyboard logic
   keyboardLoop();
-  // keyboardCycleLoop();
+
+  // Run loop specific to Handle/Button logic
+  controlLoop();
 
   // Run loop specific to BLE logic
   bleLoop();

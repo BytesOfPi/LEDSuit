@@ -40,14 +40,16 @@ void fullPattern(String val)
   }
   if (val.equals(FULL_PATT_BPM))
   {
-    gConfig.holdSuitPattern = SUIT_PATT_BPM_PARTY;
+    gConfig.holdSuitPattern = SUIT_PATT_BPM;
+    gConfig.holdSuitPal = PALETTE_PARTY.name;
     gConfig.holdMatrixPattern = MATRIX_PATT_WAVE;
     gConfig.holdCapePattern = CAPE_PATT_BPM;
     return;
   }
   if (val.equals(FULL_PATT_CCHS))
   {
-    gConfig.holdSuitPattern = SUIT_PATT_CCHS;
+    gConfig.holdSuitPattern = SUIT_PATT_PALETTE;
+    gConfig.holdSuitPal = PALETTE_CCHS.name;
     gConfig.holdMatrixPattern = MATRIX_PATT_PULSE;
     gConfig.holdCapePattern = CAPE_PATT_JUGGLE;
     return;
@@ -128,6 +130,9 @@ public:
         case BLE_PREFIX_SUIT_COL:
           gConfig.holdSuitCol = trimVal;
           break;
+        case BLE_PREFIX_SUIT_COL_2:
+          gConfig.holdSuitCol2 = trimVal;
+          break;
         case BLE_PREFIX_MATRIX_PAL:
           gConfig.holdMatrixPal = trimVal;
           break;
@@ -137,7 +142,7 @@ public:
         case BLE_PREFIX_CAPE_PAL:
           gConfig.holdCapePal = trimVal;
           break;
-        case BLE_PREFIX_CAPE_PAL_SEC:
+        case BLE_PREFIX_CAPE_PAL_2:
           gConfig.holdCapeSecPal = trimVal;
           break;
         case BLE_PREFIX_CAPE_COL:

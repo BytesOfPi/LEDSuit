@@ -32,6 +32,10 @@ void suitSetup()
 void suitLoop()
 {
     //--------------------------------------------------------------
+    // Check for global config change
+    suit->checkGlobal();
+
+    //--------------------------------------------------------------
     // Draw Suit LEDs
     suit->drawFrame();
 }

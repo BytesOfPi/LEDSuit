@@ -80,14 +80,15 @@ const TProgmemPalette16 myChristmasPalette_p PROGMEM =
 #define BLE_MATRIX_SCROLL_CALLBACK 0x05
 
 #define BLE_PREFIX_SUIT_PAL '0'
-#define BLE_PREFIX_SUIT_PAL_SEC '1'
+#define BLE_PREFIX_SUIT_PAL_2 '1'
 #define BLE_PREFIX_SUIT_COL '2'
-#define BLE_PREFIX_MATRIX_PAL '3'
-#define BLE_PREFIX_MATRIX_PAL_SEC '4'
-#define BLE_PREFIX_MATRIX_COL '5'
-#define BLE_PREFIX_CAPE_PAL '6'
-#define BLE_PREFIX_CAPE_PAL_SEC '7'
-#define BLE_PREFIX_CAPE_COL '8'
+#define BLE_PREFIX_SUIT_COL_2 '3'
+#define BLE_PREFIX_MATRIX_PAL '4'
+#define BLE_PREFIX_MATRIX_PAL_2 '5'
+#define BLE_PREFIX_MATRIX_COL '6'
+#define BLE_PREFIX_CAPE_PAL '7'
+#define BLE_PREFIX_CAPE_PAL_2 '8'
+#define BLE_PREFIX_CAPE_COL '9'
 
 //#################################################################
 // Shared Cape Values
@@ -155,42 +156,62 @@ String patternMatrixCycleSkip[] = {MATRIX_PATT_CYCLE, MATRIX_PATT_CUSTOM};
 //#################################################################
 // Shared Suit Values
 #define SUIT_PATT_CYCLE "cycle"
-#define SUIT_PATT_CCHS "paletteCCHS"
-#define SUIT_PATT_CCHS2 "paletteCCHS2"
-#define SUIT_PATT_CCHSGLIT "palletteCCHSGlitter"
+#define SUIT_PATT_PALETTE "palette"
+#define SUIT_PATT_GLITTER "palletteGlitter"
 #define SUIT_PATT_SPLIT "twoSplit"
 #define SUIT_PATT_JUGGLE "juggle"
 #define SUIT_PATT_CONFETTI "confetti"
-#define SUIT_PATT_PAL_RWB "paletteRWB"
-#define SUIT_PATT_PAL_CLOUD "paletteCloud"
-#define SUIT_PATT_PAL_LAVA "paletteLava"
-#define SUIT_PATT_PAL_HEAT "paletteHeat"
-#define SUIT_PATT_PAL_OCEAN "paletteOcean"
-#define SUIT_PATT_PAL_FOREST "paletteForest"
-#define SUIT_PATT_PAL_CMAS "paletteChristmas"
-#define SUIT_PATT_BPM_PARTY "bpmParty"
-#define SUIT_PATT_BPM_RWB "bpmRWB"
-#define SUIT_PATT_BPM_CMAS "bpmChristmas"
-#define SUIT_PATT_SOLID_BLUE "solidBlue"
-#define SUIT_PATT_SOLID_RED "solidRed"
-#define SUIT_PATT_SOLID_GREEN "solidGreen"
-#define SUIT_PATT_THE_CCHS "theaterCCHS"
-#define SUIT_PATT_THE_CMAS "theaterChristmas"
-#define SUIT_PATT_MIX_CCHS "mixinsCCHS"
-#define SUIT_PATT_MIX_LAVA "mixinsLava"
+#define SUIT_PATT_BPM "bpm"
+#define SUIT_PATT_SOLID "solid"
+#define SUIT_PATT_THEATER "theater"
+#define SUIT_PATT_MIX "mixins"
+#define SUIT_PATT_MIX2 "mixSpec"
 
-#define SUIT_PATT_MIX2_LAVA "mixSpecLava"
-#define SUIT_PATT_MIX2_OCEAN "mixSpecOcean"
-#define SUIT_PATT_MIX2_FOREST "mixSpecForest"
-
-#define SUIT_NUM_PATTERNS 27
-String patternSuit[] = {SUIT_PATT_CYCLE, SUIT_PATT_CCHS, SUIT_PATT_CCHS2, SUIT_PATT_CCHSGLIT,
-                        SUIT_PATT_SPLIT, SUIT_PATT_JUGGLE, SUIT_PATT_CONFETTI, SUIT_PATT_PAL_RWB,
-                        SUIT_PATT_PAL_CLOUD, SUIT_PATT_PAL_LAVA, SUIT_PATT_PAL_HEAT, SUIT_PATT_PAL_OCEAN,
-                        SUIT_PATT_PAL_FOREST, SUIT_PATT_PAL_CMAS, SUIT_PATT_BPM_PARTY, SUIT_PATT_BPM_RWB,
-                        SUIT_PATT_BPM_CMAS, SUIT_PATT_SOLID_BLUE, SUIT_PATT_SOLID_RED, SUIT_PATT_SOLID_GREEN,
-                        SUIT_PATT_THE_CCHS, SUIT_PATT_THE_CMAS, SUIT_PATT_MIX_CCHS, SUIT_PATT_MIX_LAVA,
-                        SUIT_PATT_MIX2_LAVA, SUIT_PATT_MIX2_OCEAN, SUIT_PATT_MIX2_FOREST};
+#define SUIT_NUM_PATTERNS 11
+String patternSuit[] = {SUIT_PATT_CYCLE, SUIT_PATT_PALETTE,
+                        SUIT_PATT_GLITTER, SUIT_PATT_SPLIT,
+                        SUIT_PATT_JUGGLE,
+                        SUIT_PATT_CONFETTI, SUIT_PATT_BPM,
+                        SUIT_PATT_SOLID, SUIT_PATT_THEATER,
+                        SUIT_PATT_MIX, SUIT_PATT_MIX2};
+                        
+// #define SUIT_PATT_CYCLE "cycle"
+// #define SUIT_PATT_CCHS "paletteCCHS"
+// #define SUIT_PATT_CCHS2 "paletteCCHS2"
+// #define SUIT_PATT_CCHSGLIT "palletteCCHSGlitter"
+// #define SUIT_PATT_SPLIT "twoSplit"
+// #define SUIT_PATT_JUGGLE "juggle"
+// #define SUIT_PATT_CONFETTI "confetti"
+// #define SUIT_PATT_PAL_RWB "paletteRWB"
+// #define SUIT_PATT_PAL_CLOUD "paletteCloud"
+// #define SUIT_PATT_PAL_LAVA "paletteLava"
+// #define SUIT_PATT_PAL_HEAT "paletteHeat"
+// #define SUIT_PATT_PAL_OCEAN "paletteOcean"
+// #define SUIT_PATT_PAL_FOREST "paletteForest"
+// #define SUIT_PATT_PAL_CMAS "paletteChristmas"
+// #define SUIT_PATT_BPM_PARTY "bpmParty"
+// #define SUIT_PATT_BPM_RWB "bpmRWB"
+// #define SUIT_PATT_BPM_CMAS "bpmChristmas"
+// #define SUIT_PATT_SOLID_BLUE "solidBlue"
+// #define SUIT_PATT_SOLID_RED "solidRed"
+// #define SUIT_PATT_SOLID_GREEN "solidGreen"
+// #define SUIT_PATT_THE_CCHS "theaterCCHS"
+// #define SUIT_PATT_THE_CMAS "theaterChristmas"
+// #define SUIT_PATT_MIX_CCHS "mixinsCCHS"
+// #define SUIT_PATT_MIX_LAVA "mixinsLava"
+// 
+// #define SUIT_PATT_MIX2_LAVA "mixSpecLava"
+// #define SUIT_PATT_MIX2_OCEAN "mixSpecOcean"
+// #define SUIT_PATT_MIX2_FOREST "mixSpecForest"
+// 
+// #define SUIT_NUM_PATTERNS 27
+// String patternSuit[] = {SUIT_PATT_CYCLE, SUIT_PATT_CCHS, SUIT_PATT_CCHS2, SUIT_PATT_CCHSGLIT,
+//                         SUIT_PATT_SPLIT, SUIT_PATT_JUGGLE, SUIT_PATT_CONFETTI, SUIT_PATT_PAL_RWB,
+//                         SUIT_PATT_PAL_CLOUD, SUIT_PATT_PAL_LAVA, SUIT_PATT_PAL_HEAT, SUIT_PATT_PAL_OCEAN,
+//                         SUIT_PATT_PAL_FOREST, SUIT_PATT_PAL_CMAS, SUIT_PATT_BPM_PARTY, SUIT_PATT_BPM_RWB,
+//                         SUIT_PATT_BPM_CMAS, SUIT_PATT_SOLID_BLUE, SUIT_PATT_SOLID_RED, SUIT_PATT_SOLID_GREEN,
+//                         SUIT_PATT_THE_CCHS, SUIT_PATT_THE_CMAS, SUIT_PATT_MIX_CCHS, SUIT_PATT_MIX_LAVA,
+//                         SUIT_PATT_MIX2_LAVA, SUIT_PATT_MIX2_OCEAN, SUIT_PATT_MIX2_FOREST};
 
 #define SUIT_NUM_CYCLE_SKIP 1
 String patternSuitCycleSkip[] = {SUIT_PATT_CYCLE};

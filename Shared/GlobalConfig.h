@@ -34,28 +34,32 @@
 #define NO_CHANGE "XXX"
 
 #define BLE_SUIT_TYPE 0x00
-#define BLE_MATRIX_TYPE 0x01
-#define BLE_CAPE_TYPE 0x02
-#define BLE_CAPE_TYPE_2 0x03
+#define BLE_SUIT_TYPE_2 0x01
+#define BLE_MATRIX_TYPE 0x02
+#define BLE_CAPE_TYPE 0x03
+#define BLE_CAPE_TYPE_2 0x04
 
 class GlobalConfig
 {
 private:
     void setupSuit(String val)
     {
-        setupSuit(val, currentSuitPalette, currentSuitColor);
+        setupSuit(val, currentSuitPalette, currentSuitColor1, currentSuitColor2);
     }
-    void setupSuit(String val, MPal pal, MCol col)
+    void setupSuit(String val, MPal pal, MCol col1, MCol col2)
     {
         currentSuitPattern->setPattern(val);
         currentSuitPalette = pal;
-        currentSuitColor = col;
+        currentSuitColor1 = col1;
+        currentSuitColor2 = col2;
         Serial.print("Suit[");
         Serial.print(val);
         Serial.print("][");
         Serial.print(pal.name);
         Serial.print("][");
-        Serial.print(col.name);
+        Serial.print(col1.name);
+        Serial.print("][");
+        Serial.print(col2.name);
         Serial.println("]");
     }
     void setupMatrix(String val)
@@ -141,7 +145,10 @@ private:
                 switch (type)
                 {
                 case BLE_SUIT_TYPE:
-                    currentSuitColor = arrMCol[i];
+                    currentSuitColor1 = arrMCol[i];
+                    return;
+                case BLE_SUIT_TYPE_2:
+                    currentSuitColor2 = arrMCol[i];
                     return;
                 case BLE_MATRIX_TYPE:
                     currentMatrixColor = arrMCol[i];
@@ -162,6 +169,7 @@ public:
     boolean changeCape = false;
     String holdSuitPal = NO_CHANGE;
     String holdSuitCol = NO_CHANGE;
+    String holdSuitCol2 = NO_CHANGE;
     String holdMatrixPal = NO_CHANGE;
     String holdMatrixCol = NO_CHANGE;
     String holdCapePal = NO_CHANGE;
@@ -189,7 +197,8 @@ public:
     // Current Suit configuration
     CPattern *currentSuitPattern;
     MPal currentSuitPalette = PALETTE_PARTY;
-    MCol currentSuitColor = COLOR_BLUE;
+    MCol currentSuitColor1 = COLOR_BLUE;
+    MCol currentSuitColor2 = COLOR_RED;
 
     GlobalConfig(CPattern *cPatt, CPattern *mPatt, CPattern *sPatt)
     {
@@ -241,6 +250,12 @@ public:
         {
             setupColor(holdSuitCol, BLE_SUIT_TYPE);
             holdSuitCol = NO_CHANGE;
+            changeSuit = true;
+        }
+        if (!holdSuitCol2.equals(NO_CHANGE))
+        {
+            setupColor(holdSuitCol2, BLE_SUIT_TYPE_2);
+            holdSuitCol2 = NO_CHANGE;
             changeSuit = true;
         }
         if (!holdMatrixPal.equals(NO_CHANGE))

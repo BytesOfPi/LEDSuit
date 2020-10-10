@@ -101,6 +101,11 @@ public:
                            NUM_LEDS_CAPE_RIGHT_03,
                            NUM_LEDS_CAPE_RIGHT_04,
                            NUM_LEDS_CAPE_RIGHT_05};
+
+        // Initialize palette and color
+        pal1 = gConfig.currentCapePalette.pal;
+        pal2 = gConfig.currentCapeSecPalette.pal;
+
         lWing.setup(capeLedsLeft, NUM_LEDS_CAPE_LEFT, leftLens, "Left");
         rWing.setup(capeLedsRight, NUM_LEDS_CAPE_RIGHT, rightLens, "Right");
     }

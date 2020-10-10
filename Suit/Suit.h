@@ -71,6 +71,9 @@ private:
 
     // Used for palette style patterns
     uint8_t startIndex = 0;
+    MPal suitPal;
+    MCol suitCol1;
+    MCol suitCol2;
 
 public:
     //--------------------------------------------------------------
@@ -91,8 +94,30 @@ public:
         FastLED.addLeds<LED_TYPE_SUIT, DATA_PIN_SUIT_002, COLOR_ORDER>(suitLeds, NUM_LEDS_SUIT_001, NUM_LEDS_SUIT_002).setCorrection(TypicalLEDStrip);
         FastLED.addLeds<LED_TYPE_SUIT, DATA_PIN_SUIT_003, COLOR_ORDER>(suitLeds, NUM_LEDS_SUIT_001 + NUM_LEDS_SUIT_002, NUM_LEDS_SUIT_003).setCorrection(TypicalLEDStrip);
 
+        // Initialize palette and color
+        suitPal = gConfig.currentSuitPalette;
+        suitCol1 = gConfig.currentSuitColor1;
+        suitCol2 = gConfig.currentSuitColor2;
+
         // set master brightness control
         FastLED.setBrightness(BRIGHTNESS);
+    }
+
+    /**
+      * checkGlobal()
+      * This method checks the global palettes and colors to see if anything
+      * changed
+      */
+    virtual void checkGlobal()
+    {
+        if (gConfig.changeSuit)
+        {
+            Serial.println("Suit Config Change");
+            suitPal = gConfig.currentSuitPalette;
+            suitCol1 = gConfig.currentSuitColor1;
+            suitCol2 = gConfig.currentSuitColor2;
+            gConfig.changeSuit = false;
+        }
     }
 
     /**
@@ -113,76 +138,94 @@ public:
     {
         //--------------------------------------------------------------
         // Palettes
-        if (val.equals("paletteCCHS"))
-            return paletteMove(myCCHS1Palette_p);
-        if (val.equals("paletteCCHS2"))
-            return paletteMove(myCCHS2Palette_p);
-        if (val.equals("paletteRWB"))
-            return paletteMove(CloudColors_p);
-        if (val.equals("paletteCloud"))
-            return paletteMove(myRedWhiteBluePalette_p);
-        if (val.equals("paletteLava"))
-            return paletteMove(LavaColors_p);
-        if (val.equals("paletteHeat"))
-            return paletteMove(HeatColors_p);
-        if (val.equals("paletteOcean"))
-            return paletteMove(OceanColors_p);
-        if (val.equals("paletteForest"))
-            return paletteMove(ForestColors_p);
-        if (val.equals("paletteChristmas"))
-            return paletteMove(myChristmasPalette_p);
-        if (val.equals("palletteCCHSGlitter"))
+        if (val.equals(SUIT_PATT_PALETTE))
+            return paletteMove(suitPal.pal); //return paletteMove(myCCHS1Palette_p);
+        if (val.equals(SUIT_PATT_GLITTER))
         {
-            paletteMove(myCCHS2Palette_p);
+            return paletteMove(suitPal.pal); // paletteMove(myCCHS2Palette_p);
             addGlitter(suitLeds, NUM_LEDS, 80);
             return 1;
         }
+        // if (val.equals("paletteCCHS"))
+        //     return paletteMove(suitPal.pal); //return paletteMove(myCCHS1Palette_p);
+        // if (val.equals("paletteCCHS2"))
+        //     return paletteMove(suitPal.pal); //return paletteMove(myCCHS2Palette_p);
+        // if (val.equals("paletteRWB"))
+        //     return paletteMove(suitPal.pal); //return paletteMove(CloudColors_p);
+        // if (val.equals("paletteCloud"))
+        //     return paletteMove(suitPal.pal); //return paletteMove(myRedWhiteBluePalette_p);
+        // if (val.equals("paletteLava"))
+        //     return paletteMove(suitPal.pal); //return paletteMove(LavaColors_p);
+        // if (val.equals("paletteHeat"))
+        //     return paletteMove(suitPal.pal); //return paletteMove(HeatColors_p);
+        // if (val.equals("paletteOcean"))
+        //     return paletteMove(suitPal.pal); //return paletteMove(OceanColors_p);
+        // if (val.equals("paletteForest"))
+        //     return paletteMove(suitPal.pal); //return paletteMove(ForestColors_p);
+        // if (val.equals("paletteChristmas"))
+        //     return paletteMove(suitPal.pal); // return paletteMove(myChristmasPalette_p);
+        // if (val.equals("palletteCCHSGlitter"))
+        // {
+        //     return paletteMove(suitPal.pal); // paletteMove(myCCHS2Palette_p);
+        //     addGlitter(suitLeds, NUM_LEDS, 80);
+        //     return 1;
+        // }
         //--------------------------------------------------------------
         // Miscellaneous
-        if (val.equals("twoSplit"))
+        if (val.equals(SUIT_PATT_SPLIT))
             return twoSplit();
-        if (val.equals("juggle"))
+        if (val.equals(SUIT_PATT_JUGGLE))
             return juggle();
-        if (val.equals("confetti"))
+        if (val.equals(SUIT_PATT_CONFETTI))
             return confetti();
 
         //--------------------------------------------------------------
         // BPM
-        if (val.equals("bpmParty"))
-            return bpmPulse(PartyColors_p);
-        if (val.equals("bpmRWB"))
-            return bpmPulse(myRedWhiteBluePalette_p);
-        if (val.equals("bpmChristmas"))
-            return bpmPulse(myChristmasPalette_p);
+        if (val.equals(SUIT_PATT_BPM))
+            return bpmPulse(suitPal.pal); // return bpmPulse(PartyColors_p);
+        // if (val.equals("bpmParty"))
+        //     return bpmPulse(suitPal.pal); // return bpmPulse(PartyColors_p);
+        // if (val.equals("bpmRWB"))
+        //     return bpmPulse(suitPal.pal); // return bpmPulse(myRedWhiteBluePalette_p);
+        // if (val.equals("bpmChristmas"))
+        //     return bpmPulse(suitPal.pal); // return bpmPulse(myChristmasPalette_p);
 
         //--------------------------------------------------------------
         // Solid
-        if (val.equals("solidBlue"))
-            return solidBlue();
-        if (val.equals("solidRed"))
-            return solidRed();
-        if (val.equals("solidGreen"))
-            return solidGreen();
+        if (val.equals(SUIT_PATT_SOLID))
+            return solidColor(); //return solidBlue();
+        //if (val.equals("solidBlue"))
+        //    return solidColor(); //return solidBlue();
+        //if (val.equals("solidRed"))
+        //    return solidColor(); //return solidRed();
+        //if (val.equals("solidGreen"))
+        //    return solidColor(); //return solidGreen();
 
         //--------------------------------------------------------------
         // Theater
-        if (val.equals("theaterCCHS"))
-            return theaterCCHS();
-        if (val.equals("theaterChristmas"))
-            return theaterChristmas();
+        if (val.equals(SUIT_PATT_THEATER))
+            return theater(suitLeds, NUM_LEDS, suitOffset, suitPal.pal); // return theaterCCHS();
+        //if (val.equals("theaterCCHS"))
+        //    return theater(suitLeds, NUM_LEDS, suitOffset, suitPal.pal); // return theaterCCHS();
+        //if (val.equals("theaterChristmas"))
+        //    return theater(suitLeds, NUM_LEDS, suitOffset, suitPal.pal); // return theaterChristmas();
 
         //--------------------------------------------------------------
         // Mixins
-        if (val.equals("mixinsCCHS"))
-            return mixinsCCHS();
-        if (val.equals("mixinsLava"))
-            return mixinsLava();
-        if (val.equals("mixSpecLava"))
-            return mixSpecLava();
-        if (val.equals("mixSpecOcean"))
-            return mixSpecOcean();
-        if (val.equals("mixSpecForest"))
-            return mixSpecForest();
+        if (val.equals(SUIT_PATT_MIX))
+            return mixins(suitPal.pal, LINEARBLEND, startIndex);
+        if (val.equals(SUIT_PATT_MIX2))
+            return mixSpec(suitPal.pal, LINEARBLEND, startIndex);
+        // if (val.equals("mixinsCCHS"))
+        //     return mixins(suitPal.pal, LINEARBLEND, startIndex); //return mixinsCCHS();
+        // if (val.equals("mixinsLava"))
+        //     return mixins(suitPal.pal, LINEARBLEND, startIndex); //return mixinsLava();
+        // if (val.equals("mixSpecLava"))
+        //     return mixSpec(suitPal.pal, LINEARBLEND, startIndex); //return mixSpecLava();
+        // if (val.equals("mixSpecOcean"))
+        //     return mixSpec(suitPal.pal, LINEARBLEND, startIndex); //return mixSpecOcean();
+        // if (val.equals("mixSpecForest"))
+        //     return mixSpec(suitPal.pal, LINEARBLEND, startIndex); //return mixSpecForest();
 
         return 0;
     }
@@ -277,6 +320,13 @@ public:
     int fillLEDsFromPaletteColors(CRGBPalette16 pal, TBlendType blendType, uint8_t startInd)
     {
         fill_palette(suitLeds, NUM_LEDS, startInd, SUIT_STD_COLOR_INDEX_INC, pal, SUIT_STD_BRIGHTNESS, blendType);
+        return 1;
+    }
+
+    int solidColor()
+    {
+        // FastLED's built-in rainbow generator
+        fill_solid(suitLeds, NUM_LEDS, suitCol1.rgb);
         return 1;
     }
 
@@ -451,7 +501,6 @@ public:
     {
         return mixSpec(ForestColors_p, LINEARBLEND, startIndex);
     }
-
 };
 
 #endif
