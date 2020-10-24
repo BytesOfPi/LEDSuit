@@ -83,7 +83,7 @@ public:
             return false;
         }
         // Both buttons are pressed
-        if (*trigButtonState == LOW && *hand1ButtonState == LOW)
+        if (trigButtonState == LOW && hand1ButtonState == LOW)
         {
             Serial.println("CLEAR STATE");
             clearTime = millis();
